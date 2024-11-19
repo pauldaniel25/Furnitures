@@ -1,0 +1,176 @@
+*{
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+
+.logo{
+
+    height: 8%;
+    width: 8%;
+}
+
+
+.btn-custom{
+    background-color: rgb(211, 73, 73);
+    color: rgb(255, 255, 255);
+    border-radius: 25px;
+    
+    
+}
+
+.btn-custom:hover{
+    background-color: black;
+    color: rgb(255, 255, 255);
+    border-radius: 0px;
+    border-color: black;
+    transition: ease 0.3s;
+}
+
+
+.btn-view{
+    background-color: rgb(211, 73, 73);
+    color: rgb(255, 255, 255);
+    border-radius: 25px;
+}
+
+.btn-view:hover{
+    background-color: none;
+    color: rgb(0, 0, 0);
+    border-radius: 0px;
+    border-color: black;
+    transition: ease 0.3s;
+}
+
+
+
+
+
+
+
+.card-img-top{
+    width: 100%;
+    height: 300px;
+    object-fit: contain;
+}
+
+.navbar{
+    top: 0;
+    position: sticky;
+    z-index: 1000;
+}
+
+.bg-footer{
+    background-color: black;
+    color: white;
+    transition: ease 0.5s;
+}
+
+
+.bg-footer:hover{
+    background-color:white;
+    color: rgb(0, 0, 0);
+    border-color: black;
+    border: 1px solid;
+}
+
+
+
+.bg-2ndnav{
+    background-color: none;
+    border-radius: 30%;
+   padding: 0%;
+}
+
+.text-nav{
+    text-decoration: none;
+    color: white;
+}
+
+.nav-item2{
+    background-color: black;
+    width: 100%;
+}
+
+.admin-image{
+    width: 100px;
+    object-fit: contain;
+   
+}
+
+.first_nav{
+    width: 60%;
+}
+
+
+
+
+
+
+
+footer {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    padding: 20px;
+    background-color: #f8f9fa; /* Adjust background color as needed */
+}
+
+footer .col {
+    flex: 1;
+    margin: 0 10px;
+    min-width: 200px; /* Adjust based on desired minimum column width */
+}
+
+footer .logo {
+    margin-bottom: 30px;
+}
+
+footer h4 {
+    font-size: 15px;
+    padding-bottom: 20px;
+}
+
+footer p {
+    font-size: 13px;
+    margin: 0 0 8px 0;
+}
+
+footer a {
+    font-size: 13px;
+    text-decoration: none;
+    color: #378370;
+    margin-bottom: 10px;
+    display: block;
+}
+
+footer .follow {
+    margin-top: 20px;
+}
+
+footer .follow i {
+    color: #378370;
+    padding-right: 8px;
+    cursor: pointer;
+}
+
+footer .payment .row img {
+    border: #378370 1px solid;
+    border-radius: 6px;
+    margin-right: 10px;
+}
+
+footer .follow i:hover,
+footer a:hover {
+    color: #40dfd1;
+}
+
+footer .copyright {
+    width: 100%;
+    text-align: center;
+    margin-top: 20px;
+}
+
+.submit-btn{
+    background-color: rgb(211, 73, 73);
+}

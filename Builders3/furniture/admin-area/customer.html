@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+   
+    <head>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+        <link rel="stylesheet" href="style.css">
+       
+        <title>CH lumberyard admin</title></head>
+<body>
+   <section id="menu">
+
+    <div class="logo">
+
+        <img src="LOGO-removebg-preview.png" alt="">
+        <h2>CH lumber</h2>
+    </div>
+
+    <div class="items">
+        <li><i class="fa-solid fa-chart-pie"></i><a href="#">Dashboard</a></li>
+        <li><i class="fa-solid fa-chart-pie"></i><a href="#">Elements</a></li>
+        <li><i class="fa-solid fa-chart-pie"></i><a href="#">Tables</a></li>
+        <li><i class="fa-solid fa-chart-pie"></i><a href="#">unknown</a></li>
+        <li><i class="fa-solid fa-chart-pie"></i><a href="#">unknown</a></li>
+       
+    </div>
+   </section>
+
+   <section id="interface">
+    <div class="navigation">
+        <div class="n1">
+            <div>
+                <i id="menu-btn" class="fa-solid fa-bars"></i>
+            </div>
+            <div class="search">
+                <i class="fa-solid fa-magnifying-glass"></i>
+                <input type="text" placeholder="Search">
+            </div>
+        </div>
+
+        <div class="profile">
+            <i class="fa-solid fa-bell"></i>
+            <img src="penguin.avif" alt="">
+        </div>
+    </div>
+    <h3 class="i-name">Dashboard</h3>
+    <div class="values">
+        <div class="val-box">
+            <i class="fa-solid fa-users"></i>
+            <div>
+                <h3>300</h3>
+                <span>Customers</span>
+            </div>
+        </div>
+        <div class="val-box">
+            <i class="fa-solid fa-cart-shopping"></i>
+            <div>
+                <h3>1000</h3>
+                <span>Orders</span>
+            </div>
+        </div>
+        <div class="val-box">
+            <i class="fa-solid fa-money-bill"></i>
+            <div>
+                <h3>30000</h3>
+                <span>Revenue</span>
+            </div>
+        </div>
+        <div class="val-box">
+            <i class="fa-solid fa-truck-fast"></i>
+            <div>
+                <h3>3000</h3>
+                <span>Bills</span>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="charts">
+        <div class="charts-cards">
+            <p class="chart-title ">Customers Per week</p>
+            <div id="bar-chart"></div>
+        </div>
+
+        <div class="charts-cards">
+            <p class="chart-title ">Orders</p>
+            <div id="area-chart"></div>
+        </div>
+        
+        
+   </div>
+    
+
+  
+   </section>
+
+
+  
+    
+   <script src="https://cdnjs.cloudflare.com/ajax/libs/apexcharts/3.49.0/apexcharts.min.js" ></script>
+
+   <script src="script.js"></script>
+</body>
+    
+    
+
+
+
+</html>

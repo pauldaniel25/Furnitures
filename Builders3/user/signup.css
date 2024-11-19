@@ -1,0 +1,130 @@
+body {
+    background: url('images/loft-home-office-interior-design.jpg') no-repeat center center fixed;
+    background-size: cover;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin: 0;
+    padding: 0;
+    display: flex;
+}
+
+/* Container to center the login card */
+.container {
+
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Login Card Styles */
+.login-card {
+    background: rgba(255, 255, 255, 0.9);
+    padding: 2rem;
+    border-radius: 10px;
+    box-shadow: 0 8px 16px rgba(0,0,0,0.3);
+    max-width: max-content;
+    width: 100%;
+    transition: transform 0.3s ease;
+}
+
+.login-card:hover {
+    transform: translateY(-5px);
+}
+
+.login-card h1 {
+    margin-bottom: 1.5rem;
+    text-align: center;
+    color: #333;
+    font-size: 2.5rem;
+}
+
+.alert-success {
+    margin-bottom: 1rem;
+    padding: 0.75rem 1.25rem;
+    border: 1px solid transparent;
+    border-radius: 0.25rem;
+    font-size: 1rem;
+}
+
+.error-message {
+    color: red;
+    text-align: center;
+    margin-bottom: 1rem;
+    font-weight: bold;
+}
+
+/* Form Styles */
+.form-label {
+    font-weight: bold;
+    color: #555;
+}
+.md-6{
+ width: 45%;
+ padding: 0;
+}
+.row{
+flex-wrap: nowrap;
+margin: 0;
+display: flex;
+justify-content: space-between;
+}
+
+.form-control {
+    border-radius: 5px;
+    padding: 0.7em;
+    margin-bottom: 0.5rem;
+    border: 1px solid #ccc;
+    transition: border-color 0.3s;
+}
+
+.form-control:focus {
+    border-color: #007bff;
+    box-shadow: none;
+}
+
+/* Submit Button Styles */
+.btn-submit {
+    width: 100%;
+    padding: 0.75rem;
+    background-color: #007bff;
+    border: none;
+    border-radius: 5px;
+    color: white;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.btn-submit:hover {
+    background-color: #0056b3;
+}
+
+/* Signup Link Styles */
+.signup-link {
+    text-align: center;
+    margin-top: 1rem;
+    color: #555;
+}
+
+.signup-link a {
+    color: #007bff;
+    text-decoration: none;
+    font-weight: bold;
+    transition: color 0.3s;
+}
+
+.signup-link a:hover {
+    text-decoration: underline;
+    color: #0056b3;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 576px) {
+    .login-card {
+        padding: 1.5rem;
+    }
+
+    .login-card h1 {
+        font-size: 2rem;
+    }
+}

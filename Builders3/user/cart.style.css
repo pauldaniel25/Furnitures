@@ -1,0 +1,112 @@
+.grid-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr;
+    gap: 10px; /* Space between grid items */
+    padding: 10px;
+}
+
+.grid-item {
+    padding: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    
+}
+.grid-item-title{
+    padding: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+
+.product-image {
+    width: 40%;
+    height: 70%;
+}
+.checkbox{
+    margin-right: 40px;
+    
+}
+
+/* Button styles */
+
+
+.btn:hover {
+    background-color: black;
+    color: white;
+}
+
+
+/* product display sectiooooon */
+
+.product-container {
+    display: flex;
+    flex-direction: column; /* Make items vertical */
+    padding: 20px;
+}
+
+.product-item {
+    display: flex; /* Display image and details side by side */
+    margin-bottom: 20px; /* Space between products */
+}
+
+.image-section {
+    flex: 1; /* Allow image section to take available space */
+}
+.details-section {
+    flex: 2; /* Allow details section to take more space */
+    padding-left: 20px; /* Space between image and details */
+}
+
+.product-name {
+    font-size: 1.5em;
+}
+
+.product-price {
+    color: #b12704; /* Amazon-like color for price */
+}
+
+.button-group {
+    margin-top: 10px;
+}
+hr {
+    border: 0;
+    height: 2px; 
+    background-image: linear-gradient(to right, rgba(0, 0, 0, 0), #000, rgba(0, 0, 0, 0)); 
+    margin: 20px 0; 
+  }
+  .grid-item-actions {
+    display: flex; /* Use flexbox to align buttons */
+    justify-content: space-between; /* Space out the buttons evenly */
+align-items: center;
+}
+
+.btn {
+    width: 100px; /* Set a fixed width for the buttons */
+    height: fit-content;
+    padding: 10px; /* Set padding to give buttons a uniform look */
+    font-size: 16px; /* Set a consistent font size */
+    margin: 0; /* Remove default margins */
+    border-radius: 5px; /* Optional: add border radius for a rounded look */
+    background-color: brown;
+    color: white;
+    border: none;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+.btn:hover{
+    transform: translateY(-5px);
+    cursor: pointer;
+    background-color: black;
+    color: white;
+}
+
+.add-to-cart {
+    background-color: brown;
+    color: white;
+}
+
+.view-more {
+    background-color: brown;
+    color: white;
+}
