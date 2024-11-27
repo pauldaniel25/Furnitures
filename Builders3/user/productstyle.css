@@ -9,7 +9,6 @@ body {
   /* Navbar styling */
   .navbar {
     background-color: #343a40;
-    padding: 1rem;
   }
   
   .navbar .navbar-brand {
@@ -64,28 +63,15 @@ body {
     max-width: 500px;
     padding: 0.5rem;
   }
-  
-  .bt {
-    border-color: brown;
-    color: black;
-    background-color: white;
-    padding: 0.5rem 1rem;
-  }
-  
-  .bt:hover {
-    border-color: brown;
-    color: black;
-    background-color: brown;
-  }
-  
+ 
   .btn-custom {
-    background-color: brown;
+    background-color: #8B9467;
     color: white;
     padding: 0.5rem 1rem;
   }
   
   .btn-custom:hover {
-    background-color: black;
+    background-color: #595f43;
     color: white;
   }
   
@@ -131,7 +117,7 @@ body {
   }
   
   .product-price {
-    color: #b12704;
+    color: #568220;
     font-size: 1.5rem;
     text-align: center;
     margin-bottom: 1rem;

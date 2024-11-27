@@ -1,101 +1,62 @@
 /* General styling */
 body {
-    font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 0;
-    background-color: #f8f9fa;
-  }
-  
-  /* Navbar styling */
-  .navbar {
-    background-color: #343a40;
-    padding: 1rem;
-  }
-  
-  .navbar .navbar-brand {
-    color: white;
-  }
-  
-  .navbar .navbar-nav .nav-link {
-    color: white;
-  }
-  
-  .navbar-toggler {
-    border: none;
-  }
-  
-  .logo {
-    width: 120px;
-  }
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: #f8f9fa;
+}
+
+.bg-light{
+  margin-top: 50px;
+}
 
 /* Product card styling */
 .card {
-    transition: all 0.3s ease;
+  transition: all 0.3s ease;
 }
 
 .card:hover {
-    transform: scale(1.05);
+  transform: scale(1.05);
 }
 
 .card img {
-    height: 250px;
-    object-fit: cover;
+  height: 250px;
+  object-fit: cover;
 }
 
 .card-title {
-    font-size: 1.2rem;
-    font-weight: bold;
+  font-size: 1.2rem;
+  font-weight: bold;
 }
- /* Search bar styling */
-  .Search {
-    flex-grow: 1;
-  }
-  
-  .Sbar {
-    max-width: 500px;
-    padding: 0.5rem;
-  }
-  
-  .bt {
-    border-color: brown;
-    color: black;
-    background-color: white;
-    padding: 0.5rem 1rem;
-  }
-  
-  .bt:hover {
-    border-color: brown;
-    color: black;
-    background-color: brown;
-  }
-  
-  .btn-custom {
-    background-color: brown;
-    color: white;
-    padding: 0.5rem 1rem;
-  }
-  
-  .btn-custom:hover {
-    background-color: black;
-    color: white;
-  }
 
+/* Search bar styling */
+.Search {
+  flex-grow: 1;
+}
+
+.Sbar {
+  max-width: 500px;
+  padding: 0.5rem;
+}
+
+.btn-custom {
+  background-color: #8B9467;
+  color: white;
+  padding: 0.5rem 1rem;
+}
+
+.btn-custom:hover {
+  background-color: #595f43;
+  color: white;
+}
 
 /* Responsive adjustments */
 @media (max-width: 768px) {
-    .navbar-custom .nav-link {
-        padding: 0.5rem 1rem;
-    }
+  .Sbar {
+      max-width: 100%;
+  }
 
-    .Sbar {
-        max-width: 100%;
-    }
-
-    .logo {
-        width: 80px;
-    }
-
-    .card img {
-        height: 150px;
-    }
+  .card img {
+      height: 150px;
+  }
 }

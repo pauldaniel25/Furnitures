@@ -1,18 +1,29 @@
+<?php
+session_start();
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Products</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link rel="stylesheet" href="../vendor/bootstrap-5.3.3/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../vendor//bootstrap-icons-1.11.3/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="../vendor/datatable-2.1.8/datatables.min.css" >
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" />
     <link rel="stylesheet" href="productstyle.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="includes/header.css">
 </head>
 <body>
 <!-- header here -->
 <?php
 require_once 'includes/header.php';
 ?>
+
+<!-- modal here -->
+<div class="modal-container"></div>
+
+
     <nav class="category-links">
   <ul class="d-flex justify-content-around align-items-center">
     <li class="nav-item"><a class="nav-link" href="#">All Categories</a></li>
@@ -37,12 +48,17 @@ require_once 'includes/header.php';
         <p class="product-quantity">Quantity: 5</p>
         <p class="product-seller">Seller: <?= htmlspecialchars($arr['seller_name']) ?></p>
         <div class="button-group">
-          <button class="btn btn-custom add-to-cart">Add to Cart</button>
-          <button class="btn btn-custom view-more">View More</button>
+        <button type="button" class="btn add-cart-btn btn-custom" data-id="<?= $arr['product_id'] ?>" id="add-to-cart" >Add to Cart</button>
+          <a href="view.php?id=<?= $arr['product_id']?>" class="btn btn-custom">View More</a>
         </div>
       </div>
     </div>
   <?php } ?>
 </main>
+<?php
+ require_once 'includes/footer.php';
+ ?>
+<script src="ajax.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

@@ -1,125 +1,95 @@
+<?php
+require_once 'classes.php';
+
+session_start();
+$user_id = $_SESSION['user_id'];
+
+$cart = new Cart();
+
+$cart_items = $cart->getCartItems($user_id);
+$total_price = 0;
+
+foreach ($cart_items as $item) {
+    $total_price += $item['product_price'] * $item['quantity'];
+}
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cart</title>
+    <link rel="stylesheet" href="../vendor/bootstrap-5.3.3/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../vendor/bootstrap-icons-1.11.3/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="../vendor/datatable-2.1.8/datatables.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" />
     <link rel="stylesheet" href="cart2style.css">
+    <link rel="stylesheet" href="includes/header.css">
 </head>
+
 <body>
-<div class="cart-container">
-    <div class="cart-header">
-        <i class="fa-solid fa-shopping-cart"></i>
-        <h2>Cart</h2>
+    <?php require_once 'includes/header.php'; 
+
+if (isset($_GET['success'])): ?>
+    <div class="alert alert-success position-absolute top-50 start-50 translate-middle" id="success-message">
+        Ordered successfully!
     </div>
-    <div class="cart-body">
-        <div class="cart-product">
-            <div class="product-image">
-                <img src="https://picsum.photos/100/100" alt="Product 1">
-            </div>
-            <div class="product-details">
-                <h4>Product 1</h4>
-            </div>
-            <div class="unit-price">
-                <p>$10.99</p>
-            </div>
-            <div class="quantity">
-                <input type="number" value="1" min="1">
-            </div>
-            <div class="total-price">
-                <p>$10.99</p>
-            </div>
-            <div class="action">
-                <button class="remove">Remove</button>
-            </div>
+
+    <script>
+        // Remove query parameter immediately
+        window.history.replaceState({}, '', window.location.href.split('?')[0]);
+
+        setTimeout(() => {
+            document.getElementById("success-message").remove();
+        }, 1000);
+    </script>
+<?php endif; ?>
+
+    <div class="cart-container">
+        <div class="cart-header">
+            <h2>Cart</h2>
         </div>
-        <div class="cart-product">
-            <div class="product-image">
-                <img src="https://picsum.photos/101/101" alt="Product 2">
-            </div>
-            <div class="product-details">
-                <h4>Product 2</h4>
-            </div>
-            <div class="unit-price">
-                <p>$20.99</p>
-            </div>
-            <div class="quantity">
-                <input type="number" value="1" min="1">
-            </div>
-            <div class="total-price">
-                <p>$20.99</p>
-            </div>
-            <div class="action">
-                <button class="remove">Remove</button>
-            </div>
+
+        <div class="cart-body">
+            <?php if (empty($cart_items)) : ?>
+                <p>Cart is empty</p>
+            <?php else : ?>
+                <?php foreach ($cart_items as $item) : ?>
+                    <div class="cart-product">
+                        <p class="cart-item-id" style="display:none;"><?= $item['cart_item_id'] ?></p>
+                        <div class="product-image">
+                            <img src="../seller/product_images2/<?= $item['product_image1'] ?>" alt="<?= $item['product_name'] ?>" class="image">
+                        </div>
+                        <div class="product-details">
+                            <h4><?= $item['product_name'] ?></h4>
+                        </div>
+                        <div class="unit-price">
+                            <p>$<?= number_format($item['product_price'], 2) ?></p>
+                        </div>
+                        <div class="quantity">
+                            <input type="number" value="<?= $item['quantity'] ?>" min="1">
+                        </div>
+                        <div class="total-price">
+                            <p>$<?= number_format($item['product_price'] * $item['quantity'], 2) ?></p>
+                        </div>
+                        <div class="action">
+                            <button class="remove action_btn">Remove</button>
+                            <button class="action_btn view-btn" id="<?= $item['product_id']?>" onclick="location.href='view.php?id=<?= $item['product_id']?>'">View</button>
+                        </div>
+                    </div>
+                <?php endforeach; ?>
+            <?php endif; ?>
         </div>
-        <div class="cart-product">
-            <div class="product-image">
-                <img src="https://picsum.photos/102/102" alt="Product 3">
-            </div>
-            <div class="product-details">
-                <h4>Product 3</h4>
-            </div>
-            <div class="unit-price">
-                <p>$30.99</p>
-            </div>
-            <div class="quantity">
-                <input type="number" value="1" min="1">
-            </div>
-            <div class="total-price">
-                <p>$30.99</p>
-            </div>
-            <div class="action">
-                <button class="remove">Remove</button>
-            </div>
-        </div>
-        <div class="cart-product">
-            <div class="product-image">
-                <img src="https://picsum.photos/103/103" alt="Product 4">
-            </div>
-            <div class="product-details">
-                <h4>Product 4</h4>
-            </div>
-            <div class="unit-price">
-                <p>$40.99</p>
-            </div>
-            <div class="quantity">
-                <input type="number" value="1" min="1">
-            </div>
-            <div class="total-price">
-                <p>$40.99</p>
-            </div>
-            <div class="action">
-                <button class="remove">Remove</button>
-            </div>
-        </div>
-        <div class="cart-product">
-            <div class="product-image">
-                <img src="https://picsum.photos/104/104" alt="Product 5">
-            </div>
-            <div class="product-details">
-                <h4>Product 5</h4>
-            </div>
-            <div class="unit-price">
-                <p>$50.99</p>
-            </div>
-            <div class="quantity">
-                <input type="number" value="1" min="1">
-            </div>
-            <div class="total-price">
-                <p>$50.99</p>
-            </div>
-            <div class="action">
-                <button class="remove">Remove</button>
-            </div>
-        </div>
-    </div>
-    <div class="cart-footer">
-        <p>Subtotal: $153.94</p>
-        <p>Shipping: $5.00</p>
-        <p class="total">Total: $158.94</p>
-        <button class="checkout">Checkout</button>
-    </div>
+        <div class="cart-footer">
+    <p class="total">Total: $<?= number_format($total_price, 2) ?></p>
+    
+    <?php if (empty($cart_items)): ?>
+        <button class="checkout" onclick="showErrorMessage()">Checkout</button>
+        <p id="error-message" class="text-danger" style="display:none;">You have no items to checkout.</p>
+    <?php else: ?>
+        <a href="checkout.php"><button class="checkout">Checkout</button></a>
+    <?php endif; ?>
 </div>
 
     <script src="cart2script.js"></script>

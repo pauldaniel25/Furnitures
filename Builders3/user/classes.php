@@ -69,6 +69,13 @@ function __construct(){
         }
 
 }    
+public function getUserData($user_id) {
+    $query = "SELECT First_Name, Last_Name, barangay_id, Email FROM user WHERE id = :user_id";
+    $stmt = $this->db->prepare($query);
+    $stmt->bindParam(':user_id', $user_id);
+    $stmt->execute();
+    return $stmt->fetch(PDO::FETCH_ASSOC);
+}
 }
 class Product {
     public $id = '';
@@ -201,4 +208,168 @@ class Product {
         }
 
         
+}
+
+class Cart {
+    public $cart_id = '';
+    public $user_id ='';
+    public $created_at = '';
+    public $updated_at = '';
+
+
+    protected $db;
+
+    function __construct(){
+        $database = new Database();
+        $this->db = $database->connect();
+        }
+        function addtocart($product_id, $quantity, $user_id) {
+            $cart_id = $this->getCartId($user_id) ?: $this->createCart($user_id);
+        
+            // Check if product already exists in cart
+            $sql = "SELECT * FROM cart_items WHERE cart_id = :cart_id AND product_id = :product_id";
+            $query = $this->db->prepare($sql);
+            $query->bindParam(':cart_id', $cart_id);
+            $query->bindParam(':product_id', $product_id);
+            $query->execute();
+        
+            if ($query->rowCount() > 0) {
+                // Update quantity if product exists
+                $sql = "UPDATE cart_items SET quantity = quantity + :quantity WHERE cart_id = :cart_id AND product_id = :product_id";
+                $query = $this->db->prepare($sql);
+                $query->bindParam(':cart_id', $cart_id);
+                $query->bindParam(':product_id', $product_id);
+                $query->bindParam(':quantity', $quantity);
+            } else {
+                // Add new product to cart
+                $sql = "INSERT INTO cart_items (cart_id, product_id, quantity) VALUES (:cart_id, :product_id, :quantity)";
+                $query = $this->db->prepare($sql);
+                $query->bindParam(':cart_id', $cart_id);
+                $query->bindParam(':product_id', $product_id);
+                $query->bindParam(':quantity', $quantity);
+            }
+        
+            return $query->execute();
+        }
+        
+        function getCartId($user_id) {
+            $sql = "SELECT cart_id FROM carts WHERE user_id = :user_id";
+            $query = $this->db->prepare($sql);
+            $query->bindParam(':user_id', $user_id);
+            $query->execute();
+            return $query->fetchColumn() ?: null;
+        }
+        
+        function createCart($user_id) {
+            $sql = "INSERT INTO carts (user_id) VALUES (:user_id)";
+            $query = $this->db->prepare($sql);
+            $query->bindParam(':user_id', $user_id);
+            $query->execute();
+            return $this->db->lastInsertId();
+        }
+        
+        public function getCartItems($user_id) {
+            $sql = "SELECT 
+                        ci.cart_item_id, 
+                        ci.product_id, 
+                        ci.quantity, 
+                        p.product_name, 
+                        p.product_image1, 
+                        p.product_price 
+                    FROM 
+                        cart_items ci 
+                    JOIN 
+                        carts c ON ci.cart_id = c.cart_id 
+                    JOIN 
+                        products p ON ci.product_id = p.product_id 
+                    WHERE 
+                        c.user_id = :user_id";
+        
+            $query = $this->db->prepare($sql);
+            $query->bindParam(':user_id', $user_id);
+            $query->execute();
+        
+            return $query->fetchAll(PDO::FETCH_ASSOC);
+        }
+    
+        public function removeCartItem($cart_item_id) {
+            $sql = "DELETE FROM cart_items WHERE cart_item_id = :cart_item_id";
+            $query = $this->db->prepare($sql);
+            $query->bindParam(':cart_item_id', $cart_item_id);
+            return $query->execute();
+        }
+    
+        public function updateQuantity($cart_item_id, $quantity) {
+            $sql = "UPDATE cart_items SET quantity = :quantity WHERE cart_item_id = :cart_item_id";
+            $query = $this->db->prepare($sql);
+            $query->bindParam(':cart_item_id', $cart_item_id);
+            $query->bindParam(':quantity', $quantity);
+            return $query->execute();
+        }
+        public function getTotalPrice($user_id) {
+            $totalPrice = 0;
+            $cart_items = $this->getCartItems($user_id);
+            foreach ($cart_items as $item) {
+              $totalPrice += $item['product_price'] * $item['quantity'];
+            }
+            return $totalPrice;
+          }
+          
+          public function clearCart($user_id) {
+            // Delete cart items
+            $items = $this->db->prepare("DELETE FROM cart_items WHERE cart_id IN (SELECT cart_id FROM carts WHERE user_id = :user_id)");
+            $items->bindParam(':user_id', $user_id);
+            $items->execute();
+            
+            // Delete cart record
+            $carts = $this->db->prepare("DELETE FROM carts WHERE user_id = :user_id");
+            $carts->bindParam(':user_id', $user_id);
+            $carts->execute();
+        }
+    
+
+}
+
+
+class Order {
+    public $id;
+    public $user_order_id;
+    public $product_id;
+    public $user_id;
+    public $seller_id;
+    public $quantity;
+    public $status;
+    public $created_at;
+    public $updated_at;
+
+    protected $db;
+
+    function __construct(){
+        $database = new Database();
+        $this->db = $database->connect();
+    }
+    public function createOrder($total_price) {
+        $sql = "INSERT INTO user_order (user_id, date, total_cost) VALUES (:user_id, :date, :total_cost)";
+        $query = $this->db->prepare($sql);
+        $query->bindParam(':user_id', $_SESSION['user_id']);
+        $query->bindParam(':date', date('Y-m-d'));
+        $query->bindParam(':total_cost', $total_price);
+    
+        if ($query->execute()) {
+            return $this->db->lastInsertId();
+        } else {
+            return "Error: Order creation failed.";
+        }
+    }
+    public function addOrderItem($order_id, $product_id, $quantity, $product_price) {
+        $sql = "INSERT INTO user_order_details (user_order_id, product_id, user_id, quantity, status) 
+                VALUES (:order_id, :product_id, :user_id, :quantity, 'pending')";
+        $query = $this->db->prepare($sql);
+        $query->bindParam(':order_id', $order_id);
+        $query->bindParam(':product_id', $product_id);
+        $query->bindParam(':user_id', $_SESSION['user_id']);
+        $query->bindParam(':quantity', $quantity);
+    
+        return $query->execute();
+    }
 }

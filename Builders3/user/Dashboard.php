@@ -5,6 +5,7 @@ if (isset($_SESSION['success'])) {
     echo '<div class="alert alert-success text-center">' . $_SESSION['success'] . '</div>';
     unset($_SESSION['success']);
 }
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -17,6 +18,7 @@ if (isset($_SESSION['success'])) {
     <link rel="stylesheet" href="../vendor/datatable-2.1.8/datatables.min.css" >
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" />
     <link rel="stylesheet" href="Dashboard.css">
+    <link rel="stylesheet" href="includes/header.css">
 </head>
 
 <!-- body -->
@@ -26,14 +28,9 @@ if (isset($_SESSION['success'])) {
 <?php
 require_once 'includes/header.php';
 ?>
-<!-- Additional Navbar -->
-<nav class="navbar-2 navbar-expand-lg navbar-dark bg-dark">
-    <ul class="navbar-nav me-auto">
-        <li class="nav-item">
-            <a class="nav-link" href="#">Top sellers</a>
-        </li>
-    </ul>
-</nav>
+<!-- modal here -->
+<div class="modal-container"></div>
+
 
 <div class="bg-light text-center">
     <h3>BEST SELLING FURNITURE</h3>
@@ -56,7 +53,7 @@ require_once 'includes/header.php';
                         <p class="card-text"><strong>Price:</strong> $<?= $arr['product_price'] ?></p>
                         <p class="card-text"><strong>Category:</strong> <?= $arr['Category'] ?></p>
                         <p class="card-text"><strong>Status:</strong> <?= htmlspecialchars($arr['status']) ?></p>
-                        <a href="#" class="btn btn-custom">Add to cart</a>
+                        <button type="button" class="btn add-cart-btn btn-custom" data-id="<?= $arr['product_id'] ?>" id="add-to-cart" >Add to Cart</button>
                         <a href="view.php?id=<?= $arr['product_id']?>" class="btn btn-custom">View Product</a>
                     </div>
                 </div>
@@ -67,7 +64,10 @@ require_once 'includes/header.php';
         </div>
     </div>
 </div>
-
+<?php
+ require_once 'includes/footer.php';
+ ?>
+<script src="ajax.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
