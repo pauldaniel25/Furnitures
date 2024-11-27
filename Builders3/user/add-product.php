@@ -1,4 +1,5 @@
 <?php
+session_start();
 // Add the necessary includes
 require_once('function.php');
 require_once('classes.php');
@@ -21,6 +22,25 @@ if ($product_id) {
         exit;
     }
 }
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    $product_id = $_POST['product_id'];
+    $quantity = filter_var($_POST['quantity'], FILTER_VALIDATE_INT);
+    $user_id = $_SESSION['user_id'];
+
+    if ($quantity <= 0) {
+        echo 'Invalid quantity';
+        exit;
+    }
+
+    $cart = new Cart();
+    try {
+        $cart->addtocart($product_id, $quantity, $user_id);
+        header('Location: cart2.php');
+        exit;
+    } catch (Exception $e) {
+        echo 'Error adding product to cart: ' . $e->getMessage();
+    }
+}
 ?>
 
 <!-- Modal Content -->
@@ -32,7 +52,8 @@ if ($product_id) {
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
 
-            <form action="" method="post" id="form-add-product" enctype="multipart/form-data">
+            <form action="<?= $_SERVER['PHP_SELF'] ?>" method="post" id="form-add-product" name="form-add-product" enctype="multipart/form-data">
+            <input type="hidden" name="product_id" value="<?= $product_id ?>">
                 <div class="modal-body">
                     <div class="d-flex">
                         <!-- Left section: Product Image -->
@@ -50,7 +71,7 @@ if ($product_id) {
                             <div class="mb-3">
                                 <label for="total-price" class="form-label">Total Price</label>
                                 <input type="text" class="form-control" id="total-price" name="total-price" value="$<?= number_format($product_price, 2) ?>" readonly>
-                            </div>
+                            </div>                      
                         </div>
                     </div>
                 </div>
@@ -74,6 +95,6 @@ if ($product_id) {
     function updatePrice() {
         const quantity = parseInt(quantityInput.value);
         const totalPrice = basePrice * quantity;
-        totalPriceInput.value = `$${totalPrice.toFixed(2)}`;
+        totalPriceInput.value = `$${totalPrice.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
     }
 </script>

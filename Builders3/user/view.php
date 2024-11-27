@@ -63,6 +63,7 @@ ob_end_flush();
 // require_once 'includes/header.php';
 ?>
 <div class="modal-container"></div>
+
 <div class="product-container">
     <div class="image-gallery">
         <div class="main-image">
