@@ -354,15 +354,11 @@ class Order {
         $query->bindParam(':user_id', $_SESSION['user_id']);
         $query->bindParam(':date', date('Y-m-d'));
         $query->bindParam(':total_cost', $total_price);
-        
     
         if ($query->execute()) {
-            $order_id = $this->db->lastInsertId();
-            $this->updateOrderStatus($order_id, 'pending');
-            return $order_id;
-            
+            return $this->db->lastInsertId();
         } else {
-            throw new Exception("Order creation failed.");
+            return "Error: Order creation failed.";
         }
     }
     public function addOrderItem($order_id, $product_id, $quantity, $product_price) {
@@ -375,47 +371,4 @@ class Order {
     
         return $query->execute();
     }
-
-    public function getOrders($user_id) {
-        $sql = "SELECT DISTINCT 
-        uo.id AS order_id,
-        uod.quantity,
-        p.product_name,
-        p.product_image1,
-        uo.date AS date_ordered,
-        uo.total_cost AS total,
-        osh.status,
-        osh.updated_at AS status_updated_at
-      FROM 
-        order_status_history osh
-        INNER JOIN user_order uo ON osh.user_order_id = uo.id
-        INNER JOIN user_order_details uod ON uo.id = uod.user_order_id
-        INNER JOIN products p ON uod.product_id = p.product_id
-      WHERE 
-        uo.user_id = :user_id
-      ORDER BY 
-        uo.date DESC";
-        $query = $this->db->prepare($sql);
-        $query->bindParam(':user_id', $user_id);
-        $query->execute();
-        return $query->fetchAll(PDO::FETCH_ASSOC);
-    }
-
-      public function updateOrderStatus(int $order_id, string $status): void {
-        $sql = "INSERT INTO order_status_history (user_order_id, status) VALUES (:order_id, :status)";
-        $query = $this->db->prepare($sql);
-        $query->bindParam(':order_id', $order_id);
-        $query->bindParam(':status', $status);
-        $query->execute();
-    }
-    
-      public function cancelOrder($order_id) {
-        $this->updateOrderStatus($order_id, 'cancelled');
-        // Additional cancellation logic...
-      }
-    
-      public function completeOrder($order_id) {
-        $this->updateOrderStatus($order_id, 'completed');
-        // Additional shipping logic...
-      }
 }
