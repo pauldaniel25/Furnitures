@@ -362,12 +362,11 @@ class Order {
         }
     }
     public function addOrderItem($order_id, $product_id, $quantity, $product_price) {
-        $sql = "INSERT INTO user_order_details (user_order_id, product_id, user_id, quantity, status) 
-                VALUES (:order_id, :product_id, :user_id, :quantity, 'pending')";
+        $sql = "INSERT INTO user_order_details (user_order_id, product_id, quantity, status) 
+                VALUES (:order_id, :product_id, :quantity, 'pending')";
         $query = $this->db->prepare($sql);
         $query->bindParam(':order_id', $order_id);
         $query->bindParam(':product_id', $product_id);
-        $query->bindParam(':user_id', $_SESSION['user_id']);
         $query->bindParam(':quantity', $quantity);
     
         return $query->execute();
