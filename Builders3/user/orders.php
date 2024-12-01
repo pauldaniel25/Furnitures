@@ -75,7 +75,9 @@ $orders = $order->getOrders($_SESSION['user_id'], $items_per_page, $offset);
                                 </td>
                                 <td>
                                     <button class="btn-cancel">Cancel</button>
+
                                     <button class="btn-view" data-id="<?= $order['order_details_id'] ?>">View Details</button>
+
                                 </td>
                             </tr>
                         <?php endforeach; ?>

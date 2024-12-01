@@ -92,6 +92,7 @@ $message = isset($_GET['message']) ? $_GET['message'] : '';
         <li><i class="fa-solid fa-chart-pie"></i><a href="product.php">Listed Products</a></li>
         <li><i class="fa-solid fa-chart-pie"></i><a href="user.php">Users</a></li>
         <li><i class="fa-solid fa-chart-pie"></i><a href="seller.php">Sellers</a></li>
+        <li><i class="fa-solid fa-chart-pie"></i><a href="Insert_categories.php">Insert Catregory</a></li>
         <li><i class="fa-solid fa-chart-pie"></i><a href="logout.php">Logout</a></li>
     </div>
 </section>

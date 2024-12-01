@@ -424,7 +424,9 @@ class Order {
     public function getOrders($user_id, $limit = null, $offset = 0) {
         $sql = "SELECT DISTINCT 
                 uo.id AS order_id,
+
                 uod.id AS order_details_id,
+
                 uod.quantity,
                 p.product_name,
                 p.product_image1,
@@ -441,6 +443,7 @@ class Order {
                 uo.user_id = :user_id
               ORDER BY 
                 uo.date DESC";
+
     
         if ($limit !== null) {
             $sql .= " LIMIT :limit OFFSET :offset";
@@ -449,11 +452,14 @@ class Order {
         $query = $this->db->prepare($sql);
         $query->bindParam(':user_id', $user_id);
     
+
         if ($limit !== null) {
             $query->bindParam(':limit', $limit, PDO::PARAM_INT);
             $query->bindParam(':offset', $offset, PDO::PARAM_INT);
         }
+
     
+
         $query->execute();
         return $query->fetchAll(PDO::FETCH_ASSOC);
     }
@@ -483,6 +489,7 @@ class Order {
         $stmt->execute();
         return $stmt->fetchColumn();
     }
+
     public function getOrderById($id) {
         $sql = "SELECT 
                     uod.id,
@@ -506,6 +513,7 @@ class Order {
         $query->bindParam(':id', $id);
         $query->execute();
     
+
         return $query->fetch(PDO::FETCH_ASSOC);
     }
       
