@@ -189,5 +189,7 @@ class SellerDashboard {
         }
         return $subscriptions;
     }
+
+  
 }
 ?>
