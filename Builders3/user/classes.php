@@ -446,7 +446,6 @@ class Order {
             $sql .= " LIMIT :limit OFFSET :offset";
         }
     
-    
         $query = $this->db->prepare($sql);
         $query->bindParam(':user_id', $user_id);
     
@@ -487,7 +486,6 @@ class Order {
     public function getOrderById($id) {
         $sql = "SELECT 
                     uod.id,
-                    uod.id,
                     p.product_name,
                     p.product_image1,
                     p.product_image2,
@@ -499,22 +497,12 @@ class Order {
                 FROM 
                     user_order_details uod
                     INNER JOIN user_order uo ON uod.user_order_id = uo.id
-                    p.product_image3,
-                    uod.quantity,
-                    uo.date AS date_ordered,
-                    uo.total_cost AS total,
-                    osh.status
-                FROM 
-                    user_order_details uod
-                    INNER JOIN user_order uo ON uod.user_order_id = uo.id
                     INNER JOIN order_status_history osh ON uo.id = osh.user_order_id
-                    INNER JOIN products p ON uod.product_id = p.product_id
                     INNER JOIN products p ON uod.product_id = p.product_id
                 WHERE 
                     uod.id = :id";
     
         $query = $this->db->prepare($sql);
-        $query->bindParam(':id', $id);
         $query->bindParam(':id', $id);
         $query->execute();
     
