@@ -513,8 +513,6 @@ class Order {
                 WHERE 
                     uod.id = :id";
     
-                    uod.id = :id";
-    
         $query = $this->db->prepare($sql);
         $query->bindParam(':id', $id);
         $query->bindParam(':id', $id);

@@ -55,9 +55,11 @@ ob_end_flush();
     <link rel="stylesheet" href="../vendor//bootstrap-icons-1.11.3/font/bootstrap-icons.min.css">
     <link rel="stylesheet" href="../vendor/datatable-2.1.8/datatables.min.css" >
     <link rel="stylesheet" href="Viewstyle.css"> 
+    <link rel="stylesheet" href="includes/header.css"> 
     
 </head>
 <body>
+<?php require_once 'includes/header.php'; ?>
     <!-- header here -->
     <?php
 // require_once 'includes/header.php';
