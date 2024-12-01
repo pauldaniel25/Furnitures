@@ -17,13 +17,14 @@ function __construct(){
     }
     public function signUp($First_Name, $Last_Name, $barangay_id, $Email, $password) {
         $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
-
-        $query = "INSERT INTO user (First_Name, Last_Name, barangay_id, Email, password) VALUES (:First_Name, :Last_Name, :barangay_id, :Email, :password)";
+    
+        // Use lowercase column names to match the table definition
+        $query = "INSERT INTO user (first_name, last_name, barangay_id, email, password) VALUES (:first_name, :last_name, :barangay_id, :email, :password)";
         $stmt = $this->db->prepare($query);
-        $stmt->bindParam(':First_Name', $First_Name);
-        $stmt->bindParam(':Last_Name', $Last_Name);
+        $stmt->bindParam(':first_name', $First_Name);
+        $stmt->bindParam(':last_name', $Last_Name);
         $stmt->bindParam(':barangay_id', $barangay_id);
-        $stmt->bindParam(':Email', $Email);
+        $stmt->bindParam(':email', $Email);
         $stmt->bindParam(':password', $hashedPassword);
     
         if ($stmt->execute()) {
@@ -424,9 +425,7 @@ class Order {
     public function getOrders($user_id, $limit = null, $offset = 0) {
         $sql = "SELECT DISTINCT 
                 uo.id AS order_id,
-
                 uod.id AS order_details_id,
-
                 uod.quantity,
                 p.product_name,
                 p.product_image1,
@@ -443,7 +442,6 @@ class Order {
                 uo.user_id = :user_id
               ORDER BY 
                 uo.date DESC";
-
     
         if ($limit !== null) {
             $sql .= " LIMIT :limit OFFSET :offset";
@@ -452,14 +450,11 @@ class Order {
         $query = $this->db->prepare($sql);
         $query->bindParam(':user_id', $user_id);
     
-
         if ($limit !== null) {
             $query->bindParam(':limit', $limit, PDO::PARAM_INT);
             $query->bindParam(':offset', $offset, PDO::PARAM_INT);
         }
-
     
-
         $query->execute();
         return $query->fetchAll(PDO::FETCH_ASSOC);
     }
@@ -489,7 +484,6 @@ class Order {
         $stmt->execute();
         return $stmt->fetchColumn();
     }
-
     public function getOrderById($id) {
         $sql = "SELECT 
                     uod.id,
@@ -513,7 +507,6 @@ class Order {
         $query->bindParam(':id', $id);
         $query->execute();
     
-
         return $query->fetch(PDO::FETCH_ASSOC);
     }
       
