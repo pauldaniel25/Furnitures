@@ -105,7 +105,7 @@ margin: 0 10px 0 25px;
     display: flex;
     justify-content: flex-start;
     align-items: center;
-    padding: 10px 14px;
+   
     border: 1px solid #d7dbe6;
     border-radius: 4px;
 }
@@ -309,6 +309,51 @@ border-style: none;
 color: none;
 background-color: none;
 }
+
+
+
+
+
+
+
+
+
+
+
+/* search bar and pending dropdown */
+/* Apply consistent styling to both the search input and dropdown */
+.search input, .status-filter select {
+    padding: 8px 12px;  /* Consistent padding */
+    font-size: 16px;    /* Same font size */
+    border: 1px solid #ccc; /* Border style */
+    border-radius: 5px; /* Rounded corners */
+    width: 100%;        /* Make both elements full width of their parent container */
+    box-sizing: border-box; /* Include padding in width */
+}
+
+/* Ensure the parent containers for both elements are the same size */
+.search, .status-filter {
+    width: 250px;  /* Same width for both */
+}
+
+/* Optional: Make the submit button in the search form match the input size */
+.search_button {
+    padding: 8px 12px;
+    font-size: 16px;
+    background-color: #00ff88; /* Match your theme color */
+    color: white;
+    border: 1px solid #00ffbf;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-left: 5px;  /* Space between the input field and button */
+}
+
+/* Hover effect for the search button */
+.search_button:hover {
+    background-color: #0056b3;
+}
+
+
 
 
 
