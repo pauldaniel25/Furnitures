@@ -424,6 +424,7 @@ class Order {
     public function getOrders($user_id, $limit = null, $offset = 0) {
         $sql = "SELECT DISTINCT 
                 uo.id AS order_id,
+                uod.id AS order_details_id,
                 uod.quantity,
                 p.product_name,
                 p.product_image1,
@@ -440,20 +441,19 @@ class Order {
                 uo.user_id = :user_id
               ORDER BY 
                 uo.date DESC";
-        
+    
         if ($limit !== null) {
             $sql .= " LIMIT :limit OFFSET :offset";
         }
-        
-        
+    
         $query = $this->db->prepare($sql);
         $query->bindParam(':user_id', $user_id);
-        
+    
         if ($limit !== null) {
             $query->bindParam(':limit', $limit, PDO::PARAM_INT);
             $query->bindParam(':offset', $offset, PDO::PARAM_INT);
         }
-        
+    
         $query->execute();
         return $query->fetchAll(PDO::FETCH_ASSOC);
     }
@@ -483,29 +483,29 @@ class Order {
         $stmt->execute();
         return $stmt->fetchColumn();
     }
-    public function getOrderById($order_id) {
+    public function getOrderById($id) {
         $sql = "SELECT 
-                    uo.id AS order_id,
-                    uo.date AS date_ordered,
-                    uo.total_cost AS total,
-                    osh.status,
-                    uod.quantity,
+                    uod.id,
                     p.product_name,
                     p.product_image1,
                     p.product_image2,
-                    p.product_image3
+                    p.product_image3,
+                    uod.quantity,
+                    uo.date AS date_ordered,
+                    uo.total_cost AS total,
+                    osh.status
                 FROM 
-                    user_order uo
-                    INNER JOIN user_order_details uod ON uo.id = uod.user_order_id
-                    INNER JOIN products p ON uod.product_id = p.product_id
+                    user_order_details uod
+                    INNER JOIN user_order uo ON uod.user_order_id = uo.id
                     INNER JOIN order_status_history osh ON uo.id = osh.user_order_id
+                    INNER JOIN products p ON uod.product_id = p.product_id
                 WHERE 
-                    uo.id = :order_id";
-        
+                    uod.id = :id";
+    
         $query = $this->db->prepare($sql);
-        $query->bindParam(':order_id', $order_id);
+        $query->bindParam(':id', $id);
         $query->execute();
-        
+    
         return $query->fetch(PDO::FETCH_ASSOC);
     }
       
