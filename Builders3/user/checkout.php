@@ -29,9 +29,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Clear cart
     $cart->clearCart($user_id);
 
-      // Insert into order_status_history
-      $order->updateOrderStatus($order_id, 'pending');
-
     header('Location: cart2.php?success=true');
     exit;
 }
