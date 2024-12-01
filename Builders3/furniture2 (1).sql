@@ -229,7 +229,7 @@ CREATE TABLE `user_order_details` (
   `product_id` int(11) NOT NULL,
   `user_id` int(11) NOT NULL,
   `seller_id` int(11) NOT NULL,
-  `status` enum('pending','completed') NOT NULL,
+  `status` enum('pending','completed','canceled') NOT NULL,
   `quantity` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 

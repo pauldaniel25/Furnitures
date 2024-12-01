@@ -87,13 +87,12 @@ $message = isset($_GET['message']) ? $_GET['message'] : '';
         <h2>CH Lumber</h2>
     </div>
     <div class="items">
-        <li><i class="fa-solid fa-chart-pie"></i><a href="admin.php">Dashboard</a></li>
-        <li><i class="fa-solid fa-chart-pie"></i><a href="insert_product.php">Products</a></li>
-        <li><i class="fa-solid fa-chart-pie"></i><a href="product.php">Listed Products</a></li>
-        <li><i class="fa-solid fa-chart-pie"></i><a href="user.php">Users</a></li>
-        <li><i class="fa-solid fa-chart-pie"></i><a href="seller.php">Sellers</a></li>
-        <li><i class="fa-solid fa-chart-pie"></i><a href="Insert_categories.php">Insert Catregory</a></li>
-        <li><i class="fa-solid fa-chart-pie"></i><a href="logout.php">Logout</a></li>
+        <li><i class="fa-solid fa-house"></i><a href="admin.php">Dashboard</a></li>
+        <li><i class="fa-solid fa-cart-plus"></i><a href="insert_product.php">Products</a></li>
+        <li><i class="fa-solid fa-cart-shopping"></i><a href="product.php">Listed Products</a></li>
+        <li><i class="fa-regular fa-user"></i><a href="user.php">Users</a></li>
+        <li><i class="fa-solid fa-user-secret"></i><a href="seller.php">Sellers</a></li>
+        <li><i class="fa-solid fa-arrow-right-from-bracket"></i><a href="logout.php">Logout</a></li>
     </div>
 </section>
 
@@ -116,8 +115,8 @@ $message = isset($_GET['message']) ? $_GET['message'] : '';
             <img src="penguin.avif" alt="Profile Picture">
         </div>
     </div>
-    <h3 class="i-name">Welcome</h3>
-    <h3 class="i-name"><?php echo $fullName; ?></h3>
+    <h3 class="i-name"></h3>
+    <h3 class="i-name">Welcome  <?php echo $fullName; ?></h3>
     
     <div class="values">
         <div class="val-box">
