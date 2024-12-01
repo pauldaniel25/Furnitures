@@ -17,13 +17,14 @@ function __construct(){
     }
     public function signUp($First_Name, $Last_Name, $barangay_id, $Email, $password) {
         $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
-
-        $query = "INSERT INTO user (First_Name, Last_Name, barangay_id, Email, password) VALUES (:First_Name, :Last_Name, :barangay_id, :Email, :password)";
+    
+        // Use lowercase column names to match the table definition
+        $query = "INSERT INTO user (first_name, last_name, barangay_id, email, password) VALUES (:first_name, :last_name, :barangay_id, :email, :password)";
         $stmt = $this->db->prepare($query);
-        $stmt->bindParam(':First_Name', $First_Name);
-        $stmt->bindParam(':Last_Name', $Last_Name);
+        $stmt->bindParam(':first_name', $First_Name);
+        $stmt->bindParam(':last_name', $Last_Name);
         $stmt->bindParam(':barangay_id', $barangay_id);
-        $stmt->bindParam(':Email', $Email);
+        $stmt->bindParam(':email', $Email);
         $stmt->bindParam(':password', $hashedPassword);
     
         if ($stmt->execute()) {
