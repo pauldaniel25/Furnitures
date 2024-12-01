@@ -193,7 +193,7 @@ class Product {
         function recommendations($Category, $currentProductId) {
             // SQL query to recommend.
             $sql = "SELECT p.*, c.category_title AS Category FROM products p INNER JOIN 
-            categories c ON p.category_id = c.category_id WHERE p.category_id = :Category 
+            categories c ON p.category_id = c.category_id WHERE c.category_title = :Category 
             AND p.product_id != :currentProductId;";
             // Prepare the SQL statement for execution.
             $query = $this->db->prepare($sql);
@@ -227,6 +227,61 @@ class Product {
             $data = $query->fetchAll();
         }
         return $data;
+    }
+
+    function getProductRatings($product_id) {
+        $sql = "SELECT rating, review FROM ratings WHERE product_id = :product_id";
+        $query = $this->db->prepare($sql);
+        $query->bindParam(':product_id', $product_id);
+        $data = null;
+        
+        if ($query->execute()) {
+            $data = $query->fetchAll();
+            $count = count($data);
+            $average_rating = ($count > 0) ? array_sum(array_column($data, 'rating')) / $count : 0;
+            $rating_count = count($data);
+            $review_count = count(array_filter($data, function($row) {
+                return !empty($row['review']);
+            }));
+            
+            return [
+                'average_rating' => round($average_rating, 2),
+                'rating_count' => $rating_count,
+                'review_count' => $review_count
+            ];
+        }
+    }
+
+      function getProductReviews($product_id) {
+        $sql = "SELECT CONCAT(u.first_name, ' ', u.last_name) AS username, r.rating, r.review 
+                FROM ratings r 
+                INNER JOIN user u ON r.user_id = u.id 
+                WHERE r.product_id = :product_id";
+        $query = $this->db->prepare($sql);
+        $query->bindParam(':product_id', $product_id);
+        $query->execute();
+        return $query->fetchAll();
+    }
+
+    function addProductReview($product_id, $user_id, $rating, $review) {
+        // Check if user_id exists
+        $userCheck = "SELECT id FROM user WHERE id = :user_id";
+        $userQuery = $this->db->prepare($userCheck);
+        $userQuery->bindParam(':user_id', $user_id);
+        $userQuery->execute();
+        
+        if ($userQuery->rowCount() == 0) {
+            throw new Exception("Invalid user ID");
+        }
+        
+        $sql = "INSERT INTO ratings (product_id, user_id, rating, review) 
+                VALUES (:product_id, :user_id, :rating, :review)";
+        $query = $this->db->prepare($sql);
+        $query->bindParam(':product_id', $product_id);
+        $query->bindParam(':user_id', $user_id);
+        $query->bindParam(':rating', $rating);
+        $query->bindParam(':review', $review);
+        return $query->execute();
     }
         
 }
@@ -511,3 +566,5 @@ class Order {
     }
       
 }
+
+

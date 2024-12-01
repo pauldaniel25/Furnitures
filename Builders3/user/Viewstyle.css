@@ -8,7 +8,6 @@
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     background-color: #f9f9f9;
-    padding: 20px;
 }
 
 /* Header styling */
@@ -113,7 +112,7 @@ body {
     box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
     overflow: hidden;
     max-width: 1000px;
-    margin: 0 auto;
+    margin: 3% auto;
     transition: transform 0.3s ease;
 }
 
@@ -223,6 +222,7 @@ body {
 .category,
 .price,
 .status,
+.reviews,
 .seller-name {
     font-size: 16px;
     color: #444444;
@@ -233,6 +233,55 @@ strong {
     color: #333333;
 }
 
+.review-section {
+  padding: 20px;
+  background-color: #f9f9f9;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  margin-top: 10px;
+}
+
+.review-section textarea {
+  width: 100%;
+  padding: 10px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  resize: vertical;
+}
+
+.review-section button[type="submit"] {
+  padding: 8px 12px;
+  font-size: 14px;
+  margin-top: 10px;
+  background-color: #4CAF50;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.review-section button[type="submit"]:hover {
+  background-color: #3e8e41;
+}
+
+.existing-reviews {
+    margin-top: 40px;
+}
+
+.review {
+    background-color: #f9f9f9;
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    margin-bottom: 20px;
+}
+
+.review strong {
+    font-weight: bold;
+    color: #333;
+}
+
 /* Buttons */
 .buttons {
     margin-top: 20px;
@@ -241,6 +290,30 @@ strong {
     flex-wrap: wrap;
 }
 
+.existing-reviews {
+  margin-top: 40px;
+}
+
+.review {
+  background-color: #f9f9f9;
+  padding: 20px;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  margin-bottom: 20px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.review-header {
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 10px;
+}
+
+.no-reviews {
+  padding: 20px;
+  text-align: center;
+  color: #666;
+}
 .btn {
     padding: 12px 25px;
     border: none;
@@ -251,6 +324,7 @@ strong {
     transition: background-color 0.3s ease, transform 0.2s ease;
     display: inline-block;
 }
+
 
 .cancel-btn {
     background-color: #e0e0e0;
@@ -294,14 +368,26 @@ strong {
 }
 
 .recommended-product {
-    background-color: #fff;
-    border-radius: 8px;
-    padding: 10px;
-    text-align: center;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-    width: calc(25% - 20px);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  background-color: #fff;
+  border-radius: 8px;
+  padding: 10px;
+  text-align: center;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  width: calc(25% - 20px);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
+.recommended-product img {
+  width: 200px; /* Adjust width */
+  height: 200px; /* Adjust height */
+  object-fit: cover; /* Maintain aspect ratio */
+  border-radius: 8px 8px 0 0; /* Optional: Match container's border-radius */
+}
+.btn-container {
+  margin-top: auto;
+}
+
 
 .recommended-product img {
     width: 100%;
