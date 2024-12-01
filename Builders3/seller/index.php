@@ -14,7 +14,7 @@
         <div class="input-group">
            <i class="fas fa-user"></i>
            <input type="text" name="fName" id="fName" placeholder="First Name" required>
-           <label for="fName">First Name</label>
+           <label for="fname">First Name</label>
         </div>
         <div class="input-group">
             <i class="fas fa-user"></i>
@@ -27,16 +27,10 @@
             <label for="email">Email</label>
         </div>
         <div class="input-group">
-    <i class="fas fa-lock"></i>
-    <input type="password" name="password" id="password" placeholder="Password" required>
-    <label for="password">Password</label>
-</div>
-<div class="input-group">
-    <i class="fas fa-lock"></i>
-    <input type="password" name="confirmPassword" id="confirmPassword" placeholder="Confirm Password" required>
-    <label for="confirmPassword">Confirm Password</label>
-</div>
-
+            <i class="fas fa-lock"></i>
+            <input type="password" name="password" id="password" placeholder="Password" required>
+            <label for="password">Password</label>
+        </div>
        <input type="submit" class="btn" value="Sign Up" name="signUp">
       </form>
       <p class="or">
@@ -47,7 +41,7 @@
         <i class="fab fa-facebook"></i>
       </div>
       <div class="links">
-        <p>Already Have Account?</p>
+        <p>Already Have Account ?</p>
         <button id="signInButton">Sign In</button>
       </div>
     </div>
@@ -82,8 +76,6 @@
           <button id="signUpButton">Sign Up</button>
         </div>
       </div>
-
       <script src="login.js"></script>
-      
 </body>
 </html>

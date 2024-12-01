@@ -1,51 +1,78 @@
 <?php
 include('../includes/connect.php');
 session_start();
-include('seller.class.php');
 
 // Check if the session email variable is set
 if (isset($_SESSION['email'])) {
     $email = $_SESSION['email'];
     $seller_id = $_SESSION['seller_id'];
 
-    // Initialize SellerDashboard object
-    $sellerDashboard = new SellerDashboard($conn);
+    // Fetch user details and subscription status from the database
+    $query = mysqli_query($conn, "SELECT s.*, sub.start_date, sub.end_date 
+                                   FROM `seller` s 
+                                   LEFT JOIN `subscription` sub ON s.subscription_id = sub.id 
+                                   WHERE s.email='$email'");
 
-    // Fetch seller details
-    $sellerDetails = $sellerDashboard->getSellerDetails($email);
+    if ($query && mysqli_num_rows($query) > 0) {
+        $row = mysqli_fetch_array($query);
+        $fullName = $row['firstName'] . ' ' . $row['lastName'];
+        $isSubscribed = !is_null($row['subscription_id']);
 
-    if ($sellerDetails) {
-        $fullName = $sellerDetails['firstName'] . ' ' . $sellerDetails['lastName'];
-        $isSubscribed = !is_null($sellerDetails['subscription_id']);
-        $current_subscription_id = $sellerDetails['subscription_id'];
+        // Count the number of listed products for the specific seller
+        $productCountQuery = mysqli_query($conn, "SELECT COUNT(*) as total_products FROM `products` WHERE `seller_id`='$seller_id'");
+        $productCount = mysqli_fetch_assoc($productCountQuery)['total_products'] ?? 0;
 
-        // Fetch product count, order count, revenue, and completed products count
-        $productCount = $sellerDashboard->getProductCount($seller_id);
-        $orderCount = $sellerDashboard->getOrderCount($seller_id);
-        $revenue = $sellerDashboard->getRevenue($seller_id);
-        $completedProductsCount = $sellerDashboard->getCompletedProductsCount($seller_id);
+        // Count the number of orders for the specific seller
+        $orderCountQuery = mysqli_query($conn, "SELECT COUNT(*) as total_orders FROM `user_order_details` WHERE `seller_id`='$seller_id'");
+        $orderCount = mysqli_fetch_assoc($orderCountQuery)['total_orders'] ?? 0;
 
-       // Fetch user details and subscription status
-  
-        
+        // Calculate total revenue for the specific seller from completed orders
+        $revenueQuery = mysqli_query($conn, "
+            SELECT SUM(p.product_price * uod.quantity) AS total_revenue
+            FROM user_order_details AS uod
+            JOIN products AS p ON uod.product_id = p.product_id
+            WHERE uod.seller_id = '$seller_id' AND uod.status = 'completed'
+        ");
+        $revenue = mysqli_fetch_assoc($revenueQuery)['total_revenue'] ?? 0;
 
-        // Fetch the current subscription details
-        $current_subscription_name = $sellerDashboard->getSubscriptionName($current_subscription_id);
 
-        
+
+        $completedProductsQuery = mysqli_query($conn, "
+            SELECT COUNT(DISTINCT uod.product_id) AS total_completed_products
+            FROM user_order_details AS uod
+            WHERE uod.seller_id = '$seller_id' AND uod.status = 'completed'
+        ");
+        $completedProductsCount = mysqli_fetch_assoc($completedProductsQuery)['total_completed_products'] ?? 0;
 
         // Initialize search parameters
         $searchTerm = isset($_GET['search_term']) ? mysqli_real_escape_string($conn, $_GET['search_term']) : '';
         $searchStatus = isset($_GET['search_status']) ? mysqli_real_escape_string($conn, $_GET['search_status']) : '';
 
-        // Fetch orders with search filters applied
-        $ordersQuery = $sellerDashboard->getOrders($seller_id, $searchTerm, $searchStatus);
+        // Build the orders query
+        $queryConditions = "WHERE uod.seller_id = '$seller_id'";
+        if ($searchTerm) {
+            $queryConditions .= " AND (u.first_name LIKE '%$searchTerm%' OR u.last_name LIKE '%$searchTerm%' OR p.product_name LIKE '%$searchTerm%')";
+        }
+        if ($searchStatus) {
+            $queryConditions .= " AND uod.status = '$searchStatus'";
+        }
+
+        // Fetch orders for the specific seller
+        $ordersQuery = mysqli_query($conn, "
+            SELECT u.first_name, u.last_name, p.product_name, uod.status, uod.quantity, (p.product_price * uod.quantity) AS total, uod.id AS order_id
+            FROM user_order_details AS uod
+            JOIN products AS p ON uod.product_id = p.product_id
+            JOIN user AS u ON uod.user_id = u.id
+            $queryConditions
+        ");
 
         // Handle order status update
         if (isset($_POST['update_status'])) {
             $order_id = $_POST['order_id'];
             $new_status = $_POST['status'];
-            if ($sellerDashboard->updateOrderStatus($order_id, $new_status)) {
+
+            $updateStatusQuery = "UPDATE `user_order_details` SET `status`='$new_status' WHERE `id`='$order_id'";
+            if (mysqli_query($conn, $updateStatusQuery)) {
                 echo "<script>alert('Order status updated successfully');</script>";
                 // Refresh the page to see updated status
                 header("Location: " . $_SERVER['PHP_SELF']);
@@ -62,7 +89,6 @@ if (isset($_SESSION['email'])) {
     $fullName = 'Guest';
     $productCount = 0;
 }
-
 ?>
 
 <!DOCTYPE html>
@@ -82,10 +108,10 @@ if (isset($_SESSION['email'])) {
     </div>
     <div class="items">
         <li><i class="fa-solid fa-chart-pie"></i><a href="seller.php">Dashboard</a></li>
-        <?php if ($current_subscription_name): ?>
+        <?php if ($isSubscribed): ?>
             <li><i class="fa-solid fa-chart-pie"></i><a href="insert_product.php">Create Listing</a></li>
         <?php else: ?>
-            <li><i class="fa-solid fa-chart-pie"></i><a href="#" class="disabled" title="You must subscribe to add a product">Create Listing (Unavailable)</a></li>
+            <li><i class="fa-solid fa-chart-pie"></i><a href="#" style="color:gray; cursor:not-allowed;" title="You must subscribe to add a product">Create Listing (Unavailable)</a></li>
         <?php endif; ?>
         <li><i class="fa-solid fa-chart-pie"></i><a href="listedproduct.php">Listed Products</a></li>
         <li><i class="fa-solid fa-chart-pie"></i><a href="Subscription.php">Subscription</a></li>
@@ -100,26 +126,22 @@ if (isset($_SESSION['email'])) {
             <div>
                 <i id="menu-btn" class="fa-solid fa-bars"></i>
             </div>
-           <!-- Search Section -->
-<div class="search">
-    <form action="" method="GET" style="display: flex; gap: 10px; align-items: center;">
-        <input type="text" name="search_term" placeholder="search names or products" value="<?php echo isset($_GET['search_term']) ? htmlspecialchars($_GET['search_term']) : ''; ?>" />
-        <button class="search_button" type="submit"><i class="fa-solid fa-magnifying-glass"></i></button>
-    </form>
-</div>
-
-<!-- Status Filter Section -->
-<div class="status-filter">
-    <form action="" method="GET" style="display: flex; align-items: center;">
-        <select name="search_status" onchange="this.form.submit()">
-            <option value="">Status</option>
-            <option value="pending" <?php echo (isset($_GET['search_status']) && $_GET['search_status'] == 'pending') ? 'selected' : ''; ?>>Pending</option>
-            <option value="completed" <?php echo (isset($_GET['search_status']) && $_GET['search_status'] == 'completed') ? 'selected' : ''; ?>>Completed</option>
-            <option value="canceled" <?php echo (isset($_GET['search_status']) && $_GET['search_status'] == 'canceled') ? 'selected' : ''; ?>>Canceled</option>
-        </select>
-    </form>
-</div>
-
+            <div class="search">
+                <form action="" method="GET" style="display: flex; gap: 10px; align-items: center;">
+                    <input type="text" name="search_term" placeholder="search names or products" value="<?php echo isset($_GET['search_term']) ? htmlspecialchars($_GET['search_term']) : ''; ?>" />
+                    <button class="search_button" type="submit"><i class="fa-solid fa-magnifying-glass"></i></button>
+                </form>
+            </div>
+            <div class="status-filter">
+                <form action="" method="GET" style="display: flex; align-items: center;">
+                    <select name="search_status" onchange="this.form.submit()">
+                        <option value="">Status</option>
+                        <option value="pending" <?php echo (isset($_GET['search_status']) && $_GET['search_status'] == 'pending') ? 'selected' : ''; ?>>Pending</option>
+                        <option value="completed" <?php echo (isset($_GET['search_status']) && $_GET['search_status'] == 'completed') ? 'selected' : ''; ?>>Completed</option>
+                        <option value="canceled" <?php echo (isset($_GET['search_status']) && $_GET['search_status'] == 'canceled') ? 'selected' : ''; ?>>Canceled</option>
+                    </select>
+                </form>
+            </div>
         </div>
         <div class="profile">
             <i class="fa-solid fa-bell"></i>

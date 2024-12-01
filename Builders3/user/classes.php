@@ -150,16 +150,25 @@ class Product {
     
             return $count > 0;
         }
-        function showproducts($keyword = ''){
-            $sql = "SELECT p.*, c.category_title AS Category FROM products p INNER JOIN categories c ON p.category_id = c.category_id WHERE (product_name LIKE '%' :keyword '%' OR product_keywords LIKE '%' :keyword '%' ) ORDER BY product_name ASC;"; 
+        function showproducts($keyword = '', $category_id = ''){
+            $sql = "SELECT p.*, c.category_title AS Category 
+                    FROM products p 
+                    INNER JOIN categories c ON p.category_id = c.category_id 
+                    WHERE (p.product_name LIKE :keyword OR p.product_keywords LIKE :keyword) 
+                    AND (p.category_id = :category_id OR :category_id = '') 
+                    ORDER BY p.product_name ASC;";
+        
             $query = $this->db->prepare($sql);
-            $query->bindparam(':keyword', $keyword);
-
-            $data = null;
-
+            $keyword = "%$keyword%";
+            $query->bindParam(':keyword', $keyword);
+            $query->bindParam(':category_id', $category_id);
+        
+            $data = [];
+        
             if ($query->execute()){
                 $data = $query->fetchAll();
             }
+        
             return $data;
         }
         function fetchRecord($recordID) {
@@ -207,7 +216,43 @@ class Product {
             return $description; // Return the original description if within the limit
         }
 
+            function getProductsByCategory($category_id) {
+        $sql = "SELECT p.*, c.category_title AS Category FROM products p INNER JOIN categories c ON p.category_id = c.category_id WHERE p.category_id = :category_id ORDER BY product_name ASC;";
+        $query = $this->db->prepare($sql);
+        $query->bindParam(':category_id', $category_id);
+        $data = null;
+
+        if ($query->execute()){
+            $data = $query->fetchAll();
+        }
+        return $data;
+    }
         
+}
+
+class Category {
+    public $category_id = '';
+    public $category_title = '';
+
+    protected $db;
+
+    function __construct(){
+        $database = new Database();
+        $this->db = $database->connect();
+    }
+
+    function getCategories() {
+        $sql = "SELECT * FROM categories ORDER BY category_title ASC;";
+        $query = $this->db->prepare($sql);
+        $data = null;
+
+        if ($query->execute()){
+            $data = $query->fetchAll();
+        }
+        return $data;
+    }
+    
+    
 }
 
 class Cart {
@@ -354,11 +399,15 @@ class Order {
         $query->bindParam(':user_id', $_SESSION['user_id']);
         $query->bindParam(':date', date('Y-m-d'));
         $query->bindParam(':total_cost', $total_price);
+        
     
         if ($query->execute()) {
-            return $this->db->lastInsertId();
+            $order_id = $this->db->lastInsertId();
+            $this->updateOrderStatus($order_id, 'pending');
+            return $order_id;
+            
         } else {
-            return "Error: Order creation failed.";
+            throw new Exception("Order creation failed.");
         }
     }
     public function addOrderItem($order_id, $product_id, $quantity, $product_price) {
@@ -371,4 +420,93 @@ class Order {
     
         return $query->execute();
     }
+
+    public function getOrders($user_id, $limit = null, $offset = 0) {
+        $sql = "SELECT DISTINCT 
+                uo.id AS order_id,
+                uod.quantity,
+                p.product_name,
+                p.product_image1,
+                uo.date AS date_ordered,
+                uo.total_cost AS total,
+                osh.status,
+                osh.updated_at AS status_updated_at
+              FROM 
+                order_status_history osh
+                INNER JOIN user_order uo ON osh.user_order_id = uo.id
+                INNER JOIN user_order_details uod ON uo.id = uod.user_order_id
+                INNER JOIN products p ON uod.product_id = p.product_id
+              WHERE 
+                uo.user_id = :user_id
+              ORDER BY 
+                uo.date DESC";
+        
+        if ($limit !== null) {
+            $sql .= " LIMIT :limit OFFSET :offset";
+        }
+        
+        
+        $query = $this->db->prepare($sql);
+        $query->bindParam(':user_id', $user_id);
+        
+        if ($limit !== null) {
+            $query->bindParam(':limit', $limit, PDO::PARAM_INT);
+            $query->bindParam(':offset', $offset, PDO::PARAM_INT);
+        }
+        
+        $query->execute();
+        return $query->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+
+      public function updateOrderStatus(int $order_id, string $status): void {
+        $sql = "INSERT INTO order_status_history (user_order_id, status) VALUES (:order_id, :status)";
+        $query = $this->db->prepare($sql);
+        $query->bindParam(':order_id', $order_id);
+        $query->bindParam(':status', $status);
+        $query->execute();
+    }
+    
+      public function cancelOrder($order_id) {
+        $this->updateOrderStatus($order_id, 'cancelled');
+        // Additional cancellation logic...
+      }
+    
+      public function completeOrder($order_id) {
+        $this->updateOrderStatus($order_id, 'completed');
+        // Additional shipping logic...
+      }
+    public function countOrders($user_id) {
+        $query = "SELECT COUNT(*) as total FROM orders WHERE user_id = :user_id";
+        $stmt = $this->db->prepare($query);
+        $stmt->bindParam(':user_id', $user_id);
+        $stmt->execute();
+        return $stmt->fetchColumn();
+    }
+    public function getOrderById($order_id) {
+        $sql = "SELECT 
+                    uo.id AS order_id,
+                    uo.date AS date_ordered,
+                    uo.total_cost AS total,
+                    osh.status,
+                    uod.quantity,
+                    p.product_name,
+                    p.product_image1,
+                    p.product_image2,
+                    p.product_image3
+                FROM 
+                    user_order uo
+                    INNER JOIN user_order_details uod ON uo.id = uod.user_order_id
+                    INNER JOIN products p ON uod.product_id = p.product_id
+                    INNER JOIN order_status_history osh ON uo.id = osh.user_order_id
+                WHERE 
+                    uo.id = :order_id";
+        
+        $query = $this->db->prepare($sql);
+        $query->bindParam(':order_id', $order_id);
+        $query->execute();
+        
+        return $query->fetch(PDO::FETCH_ASSOC);
+    }
+      
 }
