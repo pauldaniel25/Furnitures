@@ -24,6 +24,34 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['seller_id'])) {
     }
 }
 
+// Handle seller approval
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['approve_seller_id'])) {
+    $seller_id = $_POST['approve_seller_id'];
+
+    // Update the seller status to approved
+    $approveQuery = "UPDATE `seller` SET `status` = 'approved' WHERE `id` = '$seller_id'";
+
+    if (mysqli_query($conn, $approveQuery)) {
+        $message = "Seller approved successfully.";
+    } else {
+        $message = "Error approving seller: " . mysqli_error($conn);
+    }
+}
+
+// Handle seller rejection
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['reject_seller_id'])) {
+    $seller_id = $_POST['reject_seller_id'];
+
+    // Update the seller status to rejected
+    $rejectQuery = "UPDATE `seller` SET `status` = 'rejected' WHERE `id` = '$seller_id'";
+
+    if (mysqli_query($conn, $rejectQuery)) {
+        $message = "Seller rejected successfully.";
+    } else {
+        $message = "Error rejecting seller: " . mysqli_error($conn);
+    }
+}
+
 // Fetch all sellers
 $sellersQuery = mysqli_query($conn, "SELECT * FROM `seller`");
 ?>
@@ -44,12 +72,12 @@ $sellersQuery = mysqli_query($conn, "SELECT * FROM `seller`");
         <h2>CH Lumber</h2>
     </div>
     <div class="items">
-        <li><i class="fa-solid fa-chart-pie"></i><a href="admin.php">Dashboard</a></li>
-        <li><i class="fa-solid fa-chart-pie"></i><a href="insert_product.php">Create Listing</a></li>
-        <li><i class="fa-solid fa-chart-pie"></i><a href="listedproduct.php">Listed Products</a></li>
-        <li><i class="fa-solid fa-chart-pie"></i><a href="users.php">Users</a></li>
-        <li><i class="fa-solid fa-chart-pie"></i><a href="sellers.php">Sellers</a></li>
-        <li><i class="fa-solid fa-chart-pie"></i><a href="logout.php">Logout</a></li>
+        <li><i class="fa-solid fa-house"></i></i><a href="admin.php">Dashboard</a></li>
+        <li><i class="fa-solid fa-cart-plus"></i><a href="insert_product.php">Products</a></li>
+        <li><i class="fa-solid fa-cart-shopping"></i><a href="product.php">Listed Products</a></li>
+        <li><i class="fa-regular fa-user"></i><a href="user.php">Users</a></li>
+        <li><i class="fa-solid fa-user-secret"></i><a href="seller.php">Sellers</a></li>
+        <li><i class="fa-solid fa-arrow-right-from-bracket"></i><a href="logout.php">Logout</a></li>
     </div>
 </section>
 
@@ -67,6 +95,7 @@ $sellersQuery = mysqli_query($conn, "SELECT * FROM `seller`");
         <thead>
             <tr>
                 <td>Name</td>
+                <td>Status</td>
                 <td>Created At</td>
                 <td>Actions</td>
             </tr>
@@ -76,11 +105,20 @@ $sellersQuery = mysqli_query($conn, "SELECT * FROM `seller`");
             while ($seller = mysqli_fetch_assoc($sellersQuery)) {
                 echo "<tr>
                         <td>{$seller['firstName']} {$seller['lastName']}</td>
+                        <td>{$seller['status']}</td>
                         <td>{$seller['created_at']}</td>
                         <td>
                             <form action='' method='POST' style='display:inline;'>
                                 <input type='hidden' name='seller_id' value='{$seller['id']}'>
                                 <button type='submit' onclick='return confirm(\"Are you sure you want to delete this seller?\");'>Delete</button>
+                            </form>
+                            <form action='' method='POST' style='display:inline;'>
+                                <input type='hidden' name='approve_seller_id' value='{$seller['id']}'>
+                                <button type='submit' onclick='return confirm(\"Are you sure you want to approve this seller?\");'>Approve</button>
+                            </form>
+                            <form action='' method='POST' style='display:inline;'>
+                                <input type='hidden' name='reject_seller_id' value='{$seller['id']}'>
+                                <button type='submit' onclick='return confirm(\"Are you sure you want to reject this seller?\");'>Reject</button>
                             </form>
                         </td>
                     </tr>";

@@ -54,13 +54,15 @@ if (isset($_SESSION['email'])) {
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <!-- Custom CSS -->
     <link rel="stylesheet" href="style.css">
     <title>CH Lumberyard Admin</title>
 </head>
 <body>
 
-<!-- Sidebar and Header -->
+<!-- Sidebar Section -->
 <section id="menu">
     <div class="logo">
         <img src="LOGO-removebg-preview.png" alt="CH Lumber">
@@ -86,6 +88,7 @@ if (isset($_SESSION['email'])) {
             <div>
                 <i id="menu-btn" class="fa-solid fa-bars"></i>
             </div>
+            <!-- Search Section -->
             <div class="search">
                 <form action="" method="GET" style="display: flex; gap: 10px; align-items: center;">
                     <input type="text" name="search_term" placeholder="search names or products" value="<?php echo isset($_GET['search_term']) ? htmlspecialchars($_GET['search_term']) : ''; ?>" />
@@ -93,6 +96,7 @@ if (isset($_SESSION['email'])) {
                 </form>
             </div>
 
+            <!-- Status Filter Section -->
             <div class="status-filter">
                 <form action="" method="GET" style="display: flex; align-items: center;">
                     <select name="search_status" onchange="this.form.submit()">
@@ -104,13 +108,17 @@ if (isset($_SESSION['email'])) {
                 </form>
             </div>
         </div>
+
         <div class="profile">
+            <!-- Notification Icon (remains visible) -->
             <i class="fa-solid fa-bell" style="font-size: 25px; cursor: pointer;"></i>
+
+            <!-- Profile Image Click to Toggle Dropdown -->
             <div class="dropdown">
                 <img src="<?php echo $profileImg; ?>" alt="Profile Picture" width="30" height="30" class="rounded-circle" id="profilePic" data-bs-toggle="dropdown" aria-expanded="false">
                 <ul class="dropdown-menu" aria-labelledby="profilePic">
                     <li><a class="dropdown-item" href="profile.php">Profile</a></li>
-                    <li><a class="dropdown-item" href="#">Account Settings</a></li>
+                    <li><a class="dropdown-item" href="order_history.php">Order History</a></li>
                     <li><a class="dropdown-item" href="logout.php">Logout</a></li>
                 </ul>
             </div>
@@ -151,6 +159,10 @@ if (isset($_SESSION['email'])) {
         </div>
     </div>
 
+    <!-- Chart Section - Now below the values -->
+    <h2>Seller Dashboard Stats</h2>
+    <canvas id="dashboardChart" width="400" height="200"></canvas>
+
     <div class="board">
         <h1>Orders</h1>
         <table width="100%">
@@ -165,71 +177,91 @@ if (isset($_SESSION['email'])) {
                 </tr>
             </thead>
             <tbody>
-                <?php
-                if ($ordersQuery && mysqli_num_rows($ordersQuery) > 0) {
-                    while ($order = mysqli_fetch_assoc($ordersQuery)) {
-                        // Fetch values safely to avoid undefined index warnings
-                        $firstName = isset($order['user_first_name']) ? $order['user_first_name'] : 'N/A';
-                        $lastName = isset($order['user_last_name']) ? $order['user_last_name'] : 'N/A';
-                        $status = isset($order['order_status']) ? $order['order_status'] : 'Unknown';
-                        $total = isset($order['total_price']) ? $order['total_price'] : 0.00;
-                        $productName = isset($order['product_name']) ? $order['product_name'] : 'No Product Name';
-                        $quantity = isset($order['quantity']) ? $order['quantity'] : 0;
-                        $productImage = isset($order['product_image1']) ? $order['product_image1'] : 'default_image.jpg';
+    <?php
+    if ($ordersQuery && mysqli_num_rows($ordersQuery) > 0) {
+        while ($order = mysqli_fetch_assoc($ordersQuery)) {
+            $firstName = isset($order['user_first_name']) ? $order['user_first_name'] : 'N/A';
+            $lastName = isset($order['user_last_name']) ? $order['user_last_name'] : 'N/A';
+            $status = isset($order['order_status']) ? $order['order_status'] : 'Unknown';
+            $total = isset($order['total_price']) ? $order['total_price'] : 0.00;
+            $productName = isset($order['product_name']) ? $order['product_name'] : 'No Product Name';
+            $quantity = isset($order['quantity']) ? $order['quantity'] : 0;
+            $productImage = isset($order['product_image1']) ? $order['product_image1'] : 'default_image.jpg';
 
-                        echo "<tr>
-                                <td>{$firstName} {$lastName}</td>
-                                <td>{$productName}</td>
-                                <td>{$quantity}</td>
-                                <td>{$status}</td>
-                                <td>" . number_format($total, 2) . "</td>
-                                <td>
-                                    <button class='btn btn-primary' data-bs-toggle='modal' data-bs-target='#orderModal{$order['user_order_id']}'>View</button>
-                                </td>
-                            </tr>";
+            echo "<tr>
+                    <td>{$firstName} {$lastName}</td>
+                    <td>{$productName}</td>
+                    <td>{$quantity}</td>
+                    <td>{$status}</td>
+                    <td>" . number_format($total, 2) . "</td>
+                    <td>
+                        <button class='btn btn-primary' data-bs-toggle='modal' data-bs-target='#orderModal{$order['user_order_id']}'>View</button>
+                        <button class='btn btn-primary' data-bs-toggle='modal' data-bs-target='#updateModal{$order['user_order_id']}'>Update</button>
+                    </td>
+                </tr>";
 
-                        // Modal for Order Details with Status Update Form
-                        echo "<div class='modal fade' id='orderModal{$order['user_order_id']}' tabindex='-1' aria-labelledby='orderModalLabel' aria-hidden='true'>
-                            <div class='modal-dialog'>
-                                <div class='modal-content'>
-                                    <div class='modal-header'>
-                                        <h5 class='modal-title' id='orderModalLabel'>Order Details - {$productName}</h5>
-                                        <button type='button' class='btn-close' data-bs-dismiss='modal' aria-label='Close'></button>
+            // Modal for Order Details
+            echo "<div class='modal fade' id='orderModal{$order['user_order_id']}' tabindex='-1' aria-labelledby='orderModalLabel' aria-hidden='true'>
+                    <div class='modal-dialog'>
+                        <div class='modal-content'>
+                            <div class='modal-header'>
+                                <h5 class='modal-title' id='orderModalLabel'>Order Details - {$productName}</h5>
+                                <button type='button' class='btn-close' data-bs-dismiss='modal' aria-label='Close'></button>
+                            </div>
+                            <div class='modal-body'>
+                                <div class='card' style='width: 18rem;'>
+                                    <img class='card-img-top' src='product_images2/{$productImage}' alt='Product Image'>
+                                    <div class='card-body'>
+                                        <h5 class='card-title'>{$productName}</h5>
+                                        <p class='card-text'>
+                                            <strong>Customer:</strong> {$firstName} {$lastName}<br>
+                                            <strong>Quantity:</strong> {$quantity}<br>
+                                            <strong>Status:</strong> {$status}<br>
+                                            <strong>Total Price:</strong> $" . number_format($total, 2) . "<br>
+                                        </p>
                                     </div>
-                                    <form method='POST'>
-                                    <div class='modal-body'>
-                                        <div class='card' style='width: 18rem;'>
-                                            <img class='card-img-top' src='product_images2/{$productImage}' alt='Product Image'>
-                                            <div class='card-body'>
-                                                <h5 class='card-title'>{$productName}</h5>
-                                                <p class='card-text'>
-                                                    <strong>Customer:</strong> {$firstName} {$lastName}<br>
-                                                    <strong>Quantity:</strong> {$quantity}<br>
-                                                    <strong>Status:</strong> {$status}<br>
-                                                    <strong>Total Price:</strong> $" . number_format($total, 2) . "<br>
-                                                </p>
-                                                <input type='hidden' name='user_order_id' value='{$order['user_order_id']}'> 
-                                                <select name='status' class='form-select'>
-                                                    <option value='pending' " . ($status == 'pending' ? 'selected' : '') . ">Pending</option>
-                                                    <option value='completed' " . ($status == 'completed' ? 'selected' : '') . ">Completed</option>
-                                                </select>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class='modal-footer'>
-                                        <button type='submit' name='update_status' class='btn btn-success'>Update Status</button>
-                                        <button type='button' class='btn btn-secondary' data-bs-dismiss='modal'>Close</button>
-                                    </div>
-                                    </form>
                                 </div>
                             </div>
-                        </div>";
-                    }
-                } else {
-                    echo "<tr><td colspan='6'>No orders found.</td></tr>";
-                }
-                ?>
-            </tbody>
+                            <div class='modal-footer'>
+                                <button type='button' class='btn btn-secondary' data-bs-dismiss='modal'>Close</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>";
+
+            // Modal for Order Update
+            echo "<div class='modal fade' id='updateModal{$order['user_order_id']}' tabindex='-1' aria-labelledby='updateModalLabel' aria-hidden='true'>
+                    <div class='modal-dialog'>
+                        <div class='modal-content'>
+                            <div class='modal-header'>
+                                <h5 class='modal-title' id='updateModalLabel'>Update Order - {$productName}</h5>
+                                <button type='button' class='btn-close' data-bs-dismiss='modal' aria-label='Close'></button>
+                            </div>
+                            <div class='modal-body'>
+                                <!-- Update Order Form -->
+                                <form action='update_order.php' method='POST'>
+                                    <!-- Hidden input for user_order_id -->
+                                    <input type='hidden' name='user_order_id' value='{$order['user_order_id']}'>
+                                    <div class='mb-3'>
+                                        <label for='orderStatus' class='form-label'>Order Status</label>
+                                        <select name='status' class='form-select' required>
+                                            <option value='pending' " . ($status == 'pending' ? 'selected' : '') . ">Pending</option>
+                                            <option value='completed' " . ($status == 'completed' ? 'selected' : '') . ">Completed</option>
+                                            <option value='canceled' " . ($status == 'canceled' ? 'selected' : '') . ">Canceled</option>
+                                        </select>
+                                    </div>
+                                    <button type='submit' class='btn btn-primary'>Update Order</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>";
+        }
+    } else {
+        echo "<tr><td colspan='6'>No orders found.</td></tr>";
+    }
+    ?>
+</tbody>
         </table>
     </div>
 </section>
@@ -238,22 +270,72 @@ if (isset($_SESSION['email'])) {
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js"></script>
 
+<!-- Chart.js Script -->
+<script>
+    // Chart Data and Configuration Script
+    var chartData = {
+        labels: ['Orders', 'Revenue', 'Listed Products'],
+        datasets: [{
+            label: 'Seller Dashboard Data',
+            data: [
+                <?php echo $orderCount; ?>,
+                <?php echo $revenue; ?>,
+                <?php echo $productCount; ?>
+            ],
+            backgroundColor: [
+                'rgba(75, 192, 192, 0.2)',
+                'rgba(255, 159, 64, 0.2)',
+                'rgba(54, 162, 235, 0.2)'
+            ],
+            borderColor: [
+                'rgba(75, 192, 192, 1)',
+                'rgba(255, 159, 64, 1)',
+                'rgba(54, 162, 235, 1)'
+            ],
+            borderWidth: 1
+        }]
+    };
+
+    var ctx = document.getElementById('dashboardChart').getContext('2d');
+    var dashboardChart = new Chart(ctx, {
+        type: 'bar',
+        data: chartData,
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    ticks: {
+                        callback: function(value) {
+                            // Format revenue as currency
+                            if (value === <?php echo $revenue; ?>) {
+                                return '$' + value.toFixed(2); // Format revenue value with currency symbol
+                            }
+                            return value;
+                        }
+                    }
+                }
+            },
+            plugins: {
+                datalabels: {
+                    display: true,
+                    color: 'black',
+                    align: 'top',
+                    font: {
+                        weight: 'bold',
+                        size: 14
+                    },
+                    formatter: function(value, context) {
+                        // Format revenue value with currency
+                        if (context.datasetIndex === 1) { // Index 1 represents the revenue
+                            return '$' + value.toFixed(2);  // Display as currency
+                        }
+                        return value;
+                    }
+                }
+            }
+        }
+    });
+</script>
+
 </body>
 </html>
-
-<?php
-// Handle status update
-if (isset($_POST['update_status'])) {
-    $user_order_id = $_POST['user_order_id'];
-    $new_status = $_POST['status'];
-
-    // Update the status in the user_order_details table
-    $updateStatusQuery = "UPDATE user_order_details SET status = '$new_status' WHERE user_order_id = '$user_order_id' AND seller_id = '$seller_id'";
-
-    if (mysqli_query($conn, $updateStatusQuery)) {
-        echo "<script>alert('Order status updated successfully');</script>";
-    } else {
-        echo "<script>alert('Error updating order status');</script>";
-    }
-}
-?>

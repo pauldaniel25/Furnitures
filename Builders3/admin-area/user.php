@@ -44,12 +44,12 @@ $usersQuery = mysqli_query($conn, "SELECT * FROM `user`");
         <h2>CH Lumber</h2>
     </div>
     <div class="items">
-        <li><i class="fa-solid fa-chart-pie"></i><a href="admin.php">Dashboard</a></li>
-        <li><i class="fa-solid fa-chart-pie"></i><a href="insert_product.php">Create Listing</a></li>
-        <li><i class="fa-solid fa-chart-pie"></i><a href="listedproduct.php">Listed Products</a></li>
-        <li><i class="fa-solid fa-chart-pie"></i><a href="users.php">Users</a></li>
-        <li><i class="fa-solid fa-chart-pie"></i><a href="sellers.php">Sellers</a></li>
-        <li><i class="fa-solid fa-chart-pie"></i><a href="logout.php">Logout</a></li>
+        <li><i class="fa-solid fa-house"></i></i><a href="admin.php">Dashboard</a></li>
+        <li><i class="fa-solid fa-cart-plus"></i><a href="insert_product.php">Products</a></li>
+        <li><i class="fa-solid fa-cart-shopping"></i><a href="product.php">Listed Products</a></li>
+        <li><i class="fa-regular fa-user"></i><a href="user.php">Users</a></li>
+        <li><i class="fa-solid fa-user-secret"></i><a href="seller.php">Sellers</a></li>
+        <li><i class="fa-solid fa-arrow-right-from-bracket"></i><a href="logout.php">Logout</a></li>
     </div>
 </section>
 
