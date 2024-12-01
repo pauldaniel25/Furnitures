@@ -19,7 +19,7 @@ if(isset($_POST['signUp'])){
         $insertQuery="INSERT INTO admin(firstName,lastName,email,password)
                        VALUES ('$firstName','$lastName','$email','$password')";
             if($conn->query($insertQuery)==TRUE){
-                header("location: admin_signup.php");
+                header("location: admin_sign.php");
             }
             else{
                 echo "Error:".$conn->error;

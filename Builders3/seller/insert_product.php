@@ -9,6 +9,7 @@ if (!isset($_SESSION['seller_id'])) {
 
 $seller_id = $_SESSION['seller_id'];
 
+
 if (isset($_POST['insert_product'])) {
     // Retrieve form data
     $product_title = $_POST['product_title'];
@@ -19,7 +20,6 @@ if (isset($_POST['insert_product'])) {
     $product_image2 = $_FILES['product_image2']['name'];
     $product_image3 = $_FILES['product_image3']['name'];
     $product_price = $_POST['product_price'];
-    $product_quantity = $_POST['product_quantity']; // Quantity field
     $product_status = 'true';
 
     // Temporary file names
@@ -30,7 +30,7 @@ if (isset($_POST['insert_product'])) {
     // Validation
     if (empty($product_title) || empty($product_description) || empty($product_keywords) || 
         empty($product_category) || empty($product_image1) || empty($product_image2) || 
-        empty($product_image3) || empty($product_price) || empty($product_quantity)) {
+        empty($product_image3) || empty($product_price)) {
         echo "<script>alert('All fields are required to be filled');</script>";
         exit();
     } else {
@@ -41,9 +41,9 @@ if (isset($_POST['insert_product'])) {
 
         // Insert product into the database
         $insert_products = "INSERT INTO `products` (product_name, product_description, product_keywords, 
-            category_id, product_image1, product_image2, product_image3, product_price, seller_id, quantity, date, status) 
+            category_id, product_image1, product_image2, product_image3, product_price, seller_id, date, status) 
             VALUES ('$product_title', '$product_description', '$product_keywords', '$product_category', 
-            '$product_image1', '$product_image2', '$product_image3', '$product_price', '$seller_id', '$product_quantity', NOW(), '$product_status')";
+            '$product_image1', '$product_image2', '$product_image3', '$product_price', '$seller_id', NOW(), '$product_status')";
 
         $result_query = mysqli_query($conn, $insert_products);
 
@@ -57,6 +57,8 @@ if (isset($_POST['insert_product'])) {
 
 ?>
 
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -64,10 +66,14 @@ if (isset($_POST['insert_product'])) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Insert products</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-    <link rel="stylesheet" href="../style.css">
+ <!--font awesome cdn-->
+ <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+ <!--css link-->
+ <link rel="stylesheet" href="../style.css">
 </head>
 <body class="bg_light">
     <div class="container">
+
         <h1 class="text-center mt-3">Insert Products</h1>
         <form action="" method="post" enctype="multipart/form-data">
             <!-- Product Title -->
@@ -129,17 +135,10 @@ if (isset($_POST['insert_product'])) {
                        step="0.01" autocomplete="off" required>
             </div>
 
-            <!-- Product Quantity -->
-            <div class="form-outline mb-4 w-50 m-auto">
-                <label for="product_quantity" class="form-label">Product Quantity</label>
-                <input type="number" name="product_quantity" id="product_quantity" class="form-control" placeholder="Enter product quantity"
-                       autocomplete="off" required>
-            </div>
-
             <!-- Submit Button -->
-            <div class="form-outline mb-4 w-50 m-auto">
-                <input type="submit" name="insert_product" class="btn btn-info mb-3 px-3" value="Insert Product">
-            </div>
+                <div class="form-outline mb-4 w-50 m-auto">
+                    <input type="submit" name="insert_product" class="btn btn-info mb-3 px-3" value="Insert Product">
+                </div>
 
         </form>
     </div>
