@@ -125,7 +125,7 @@ input:focus~label,input:not(:placeholder-shown)~label{
     font-weight:bold;
 }
 button{
-    color:rgb(29, 206, 132);
+    color:rgb(125,125,235);
     border:none;
     background-color:transparent;
     font-size:1rem;
@@ -133,5 +133,5 @@ button{
 }
 button:hover{
     text-decoration:underline;
-    color:rgb(32, 139, 86);
+    color:blue;
 }
