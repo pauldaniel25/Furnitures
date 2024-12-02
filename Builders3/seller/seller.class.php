@@ -162,7 +162,7 @@ class SellerDashboard {
                 uod.status AS order_status, 
                 uod.quantity, 
                 (p.product_price * uod.quantity) AS total_price, 
-                uod.id AS order_id,
+                uod.id AS user_order_id,   -- Changed from order_id to user_order_id
                 uod.seller_id, 
                 uod.user_id
             FROM 
@@ -179,10 +179,25 @@ class SellerDashboard {
     
 
     // Update order status
-    public function updateOrderStatus($order_id, $new_status) {
-        $updateStatusQuery = "UPDATE `user_order_details` SET `status`='$new_status' WHERE `id`='$order_id'";
-        return mysqli_query($this->conn, $updateStatusQuery);
+   // Update the order status
+public function updateOrderStatus($order_id, $new_status) {
+    // Check if new status is valid
+    if (!in_array($new_status, ['pending', 'completed','canceled'])) {
+        return false; // Invalid status
     }
+
+    // Prepare the SQL query to update the status
+    $updateStatusQuery = "UPDATE `user_order_details` SET `status` = ? WHERE `id` = ?";
+    $stmt = $this->conn->prepare($updateStatusQuery);
+    $stmt->bind_param("si", $new_status, $order_id);
+    
+    // Execute the query and check if it was successful
+    if ($stmt->execute()) {
+        return true; // Successfully updated
+    } else {
+        return false; // Failed to update
+    }
+}
 
     // Get subscription name by ID
     public function getSubscriptionName($subscription_id) {
