@@ -363,9 +363,28 @@ background-color: none;
 
 
 
+/* Increase size of the image inside the modal and make it square */
+.product-image {
+    width: 100%; /* Make the image fill the container width */
+    height: 300px; /* Set a fixed height to make it square */
+    object-fit: cover; /* Ensure the image scales nicely while maintaining aspect ratio */
+    border-radius: 0; /* Make sure it's square and not rounded */
+}
 
+/* Optional: Increase the modal size */
+.modal-lg {
+    max-width: 80%; /* Adjust the modal size to make it larger */
+}
 
+/* Make the card body look clean and spaced */
+.card-body {
+    padding: 20px; /* Add some padding inside the card body */
+}
 
+/* Add a bit of spacing between the image and the card content */
+.card {
+    width: 100%; /* Ensure the card takes full width inside the modal */
+}
 
 
 

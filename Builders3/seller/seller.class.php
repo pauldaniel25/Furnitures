@@ -137,24 +137,46 @@ class SellerDashboard {
         return mysqli_fetch_assoc($query)['total_completed_products'] ?? 0;
     }
 
-    // Fetch orders with optional search filters
     public function getOrders($seller_id, $searchTerm = '', $searchStatus = '') {
+        // Initial condition to filter by seller_id
         $queryConditions = "WHERE uod.seller_id = '$seller_id'";
+    
+        // If searchTerm is provided, filter by product name, user name, etc.
         if ($searchTerm) {
             $queryConditions .= " AND (u.first_name LIKE '%$searchTerm%' OR u.last_name LIKE '%$searchTerm%' OR p.product_name LIKE '%$searchTerm%')";
         }
+    
+        // If searchStatus is provided, filter by order status
         if ($searchStatus) {
             $queryConditions .= " AND uod.status = '$searchStatus'";
         }
-
+    
+        // SQL query to fetch order details along with product images
         return mysqli_query($this->conn, "
-            SELECT u.first_name, u.last_name, p.product_name, uod.status, uod.quantity, (p.product_price * uod.quantity) AS total, uod.id AS order_id
-            FROM user_order_details AS uod
-            JOIN products AS p ON uod.product_id = p.product_id
-            JOIN user AS u ON uod.user_id = u.id
+            SELECT 
+                u.first_name AS user_first_name, 
+                u.last_name AS user_last_name, 
+                p.product_name, 
+                p.product_image1,  
+                p.product_price, 
+                uod.status AS order_status, 
+                uod.quantity, 
+                (p.product_price * uod.quantity) AS total_price, 
+                uod.id AS order_id,
+                uod.seller_id, 
+                uod.user_id
+            FROM 
+                user_order_details AS uod
+            JOIN 
+                products AS p ON uod.product_id = p.product_id
+            JOIN 
+                user AS u ON uod.user_id = u.id
+            JOIN 
+                seller AS s ON uod.seller_id = s.id
             $queryConditions
         ");
     }
+    
 
     // Update order status
     public function updateOrderStatus($order_id, $new_status) {
