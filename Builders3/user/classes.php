@@ -174,7 +174,9 @@ class Product {
         }
         function fetchRecord($recordID) {
             // SQL query to select a single product based on its ID.
-            $sql = "SELECT p.*, c.category_title AS Category FROM products p INNER JOIN categories c ON p.category_id = c.category_id WHERE product_id = :recordID;";
+            $sql = "SELECT p.*, c.category_title AS Category, CONCAT(s.firstName, ' ', s.lastName) AS Seller FROM products p
+             INNER JOIN categories c ON p.category_id = c.category_id
+             INNER JOIN seller s ON p.seller_id = s.id WHERE product_id = :recordID;";
     
             // Prepare the SQL statement for execution.
                    $query = $this->db->prepare($sql);

@@ -20,7 +20,6 @@ if ($id === false) {
     } else {
         $product_name = htmlspecialchars($record['product_name']);
         $product_description = htmlspecialchars($record['product_description']);
-        $product_keywords = htmlspecialchars($record['product_keywords']);
         $category_id = htmlspecialchars($record['category_id']);
         $category_name = htmlspecialchars($record['Category']);
         $product_image1 = htmlspecialchars($record['product_image1']);
@@ -29,7 +28,7 @@ if ($id === false) {
         $seller_id = htmlspecialchars($record['seller_id']);
         $product_image2 = htmlspecialchars($record['product_image2']);
         $product_image3 = htmlspecialchars($record['product_image3']);
-        $seller_name = htmlspecialchars($record['seller_name']);
+        $seller_name = htmlspecialchars($record['Seller']);
 
         $arrayrecommend = $prodobj->recommendations($category_name, $id);
         $ratings = $prodobj->getProductRatings($id);
@@ -83,6 +82,7 @@ require_once 'includes/header.php';
 // require_once 'includes/header.php';
 ?>
 <div class="modal-container"></div>
+<div class="review-modal"></div>
 
 <div class="product-container">
     <div class="image-gallery">
@@ -102,14 +102,24 @@ require_once 'includes/header.php';
             <?php }else
          ?>
         </div>
+
     </div>
 
     <div class="product-info">
-        <h1 class="product-name"><?= $product_name ?></h1>
-        <p class="product-description"><?= $product_description ?></p>
-        <p class="product-keywords"><strong>Keywords:</strong> <?= $product_keywords ?></p>
-        <p class="category"><strong>Category:</strong> <?= htmlspecialchars($category_name) ?></p>
-        <p class="price"><strong>Price:</strong> $<?= number_format($product_price, 2) ?></p>
+      <div class="Title">
+      <div class="Name"><h1 class="product-name"><?= $product_name ?></h1></div>
+      <p class="category">
+  <span class="label"><strong>Category:</strong></span> 
+  <span class="category-name"><?= htmlspecialchars($category_name) ?></span>
+</p>
+        </div>
+        <hr>
+        <div class="description">
+        <p class="product-description"><strong>Description: </strong><?= $product_description ?></p>
+
+</div>
+
+        <p class="price"><strong> ₱<?= number_format($product_price, 2) ?></strong></p>
         <p class="status"><strong>Status:</strong> <?= ucfirst($status) ?></p>
         <p class="seller-name"><strong>Seller:</strong> <?= $seller_name ?></p>
 
@@ -121,35 +131,8 @@ require_once 'includes/header.php';
   </p>
   (<span id="rating-count"><?= $rating_count ?></span> reviews)
 </div>
-<div class="review-section">
-  <h2 class="reviews-header">Leave a Review</h2>
-  <form action="" method="post">
-    <input type="hidden" name="product_id" value="<?= $id ?>">
-    <input type="hidden" name="user_id" value="<?= $_SESSION['user_id'] ?>">
-    
-    <div class="rating-container">
-      <span class="rating-label">Rating:</span>
-      <select name="rating" id="rating-input" required>
-        <option value="">Select Rating</option>
-        <option value="1">1</option>
-        <option value="2">2</option>
-        <option value="3">3</option>
-        <option value="4">4</option>
-        <option value="5">5</option>
-      </select>
-    </div>
-    
-    <textarea 
-      name="review" 
-      placeholder="Write your review" 
-      maxlength="500"
-      class="review-textarea"
-    ></textarea>
 
-    <button type="submit" class="submit-btn">Submit Review</button>
-    <div class="error-message"></div>
-  </form>
-</div>
+<button class="btn review-btn" data-id="<?= $id ?>">Leave a Review</button>
 
         <div class="buttons">
             <button class="btn cancel-btn" onclick="window.location.href='Dashboard.php'">Cancel</button>
@@ -158,6 +141,28 @@ require_once 'includes/header.php';
         </div>
     </div>
 </div>
+
+
+<div class="recommendation-section">
+  <h2>Recommended Products</h2>
+  <div class="recommended-products">
+    <?php if (!empty($arrayrecommend)):?>
+      <?php foreach ($arrayrecommend as $recommendation): ?>
+        <div class="recommended-product">
+          <img src="../seller/product_images2/<?= htmlspecialchars($recommendation['product_image1']) ?>" alt="<?= htmlspecialchars($recommendation['product_name']) ?>">
+          <p class="recommended-product-name"><?= htmlspecialchars($recommendation['product_name']) ?></p>
+          <p class="recommended-product-price">$<?= number_format($recommendation['product_price'], 2) ?></p>
+          <div class="btn-container">
+            <a href="view.php?id=<?= $recommendation ['product_id']?>" class="btn btn-primary">View More</a>
+          </div>
+        </div>
+      <?php endforeach; ?>
+    <?php else: ?>
+      <p>No recommendations available.</p>
+    <?php endif; ?>
+  </div>
+</div>
+
 <div class="existing-reviews">
     <h2>Reviews (<span id="review-count"><?= $review_count ?></span>)</h2>
     <div id="reviews-container">
@@ -179,25 +184,6 @@ require_once 'includes/header.php';
     </div>
 </div>
 
-<div class="recommendation-section">
-  <h2>Recommended Products</h2>
-  <div class="recommended-products">
-    <?php if (!empty($arrayrecommend)):?>
-      <?php foreach ($arrayrecommend as $recommendation): ?>
-        <div class="recommended-product">
-          <img src="../seller/product_images2/<?= htmlspecialchars($recommendation['product_image1']) ?>" alt="<?= htmlspecialchars($recommendation['product_name']) ?>">
-          <p class="recommended-product-name"><?= htmlspecialchars($recommendation['product_name']) ?></p>
-          <p class="recommended-product-price">$<?= number_format($recommendation['product_price'], 2) ?></p>
-          <div class="btn-container">
-            <a href="view.php?id=<?= $recommendation ['product_id']?>" class="btn btn-primary">View More</a>
-          </div>
-        </div>
-      <?php endforeach; ?>
-    <?php else: ?>
-      <p>No recommendations available.</p>
-    <?php endif; ?>
-  </div>
-</div>
 
 
 
