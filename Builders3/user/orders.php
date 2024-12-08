@@ -41,6 +41,7 @@ $orders = $order->getOrders($_SESSION['user_id'], $items_per_page, $offset);
         </div>
     </div>
 </div>
+
 <!-- modal heree -->
     <?php require_once 'includes/header.php'; ?>
     <div class="container">
@@ -69,12 +70,12 @@ $orders = $order->getOrders($_SESSION['user_id'], $items_per_page, $offset);
                                 <td><?= $order['date_ordered']?></td>
                                 <td>$<?= number_format($order['total'], 2)?></td>
                                 <td>
-                                    <span class="status <?= $order['status'] ?>">
-                                        <?= $order['status'] ?>
+                                    <span class="status <?= $order['order_status'] ?>">
+                                        <?= $order['order_status'] ?>
                                     </span>
                                 </td>
                                 <td>
-                                    <button class="btn-cancel">Cancel</button>
+                                <button class="btn-cancel" data-id="<?= $order['order_details_id'] ?>">Cancel</button>
                                     <button class="btn-view" data-id="<?= $order['order_details_id'] ?>">View Details</button>
                                 </td>
                             </tr>

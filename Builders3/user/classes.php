@@ -378,7 +378,8 @@ class Cart {
                         ci.quantity, 
                         p.product_name, 
                         p.product_image1, 
-                        p.product_price 
+                        p.product_price,
+                        p.seller_id
                     FROM 
                         cart_items ci 
                     JOIN 
@@ -468,13 +469,14 @@ class Order {
             throw new Exception("Order creation failed.");
         }
     }
-    public function addOrderItem($order_id, $product_id, $quantity, $product_price) {
-        $sql = "INSERT INTO user_order_details (user_order_id, product_id, quantity, status) 
-                VALUES (:order_id, :product_id, :quantity, 'pending')";
+    public function addOrderItem($order_id, $product_id, $quantity, $product_price, $seller_id) {
+        $sql = "INSERT INTO user_order_details (user_order_id, product_id, quantity, seller_id, status) 
+                VALUES (:order_id, :product_id, :quantity, :seller_id, 'pending')";
         $query = $this->db->prepare($sql);
         $query->bindParam(':order_id', $order_id);
         $query->bindParam(':product_id', $product_id);
         $query->bindParam(':quantity', $quantity);
+        $query->bindParam(':seller_id', $seller_id);
     
         return $query->execute();
     }
@@ -489,6 +491,7 @@ class Order {
                 uo.date AS date_ordered,
                 uo.total_cost AS total,
                 osh.status,
+                uod.status AS order_status,
                 osh.updated_at AS status_updated_at
               FROM 
                 order_status_history osh
@@ -517,18 +520,17 @@ class Order {
     }
 
 
-      public function updateOrderStatus(int $order_id, string $status): void {
+    public function updateOrderStatus(int $order_id, string $status): bool {
         $sql = "INSERT INTO order_status_history (user_order_id, status) VALUES (:order_id, :status)";
         $query = $this->db->prepare($sql);
         $query->bindParam(':order_id', $order_id);
         $query->bindParam(':status', $status);
-        $query->execute();
+        return $query->execute();
     }
     
-      public function cancelOrder($order_id) {
-        $this->updateOrderStatus($order_id, 'cancelled');
-        // Additional cancellation logic...
-      }
+    public function cancelOrder($order_id): bool {
+        return $this->updateOrderStatus($order_id, 'cancelled');
+    }
     
       public function completeOrder($order_id) {
         $this->updateOrderStatus($order_id, 'completed');
@@ -551,6 +553,7 @@ class Order {
                     uod.quantity,
                     uo.date AS date_ordered,
                     uo.total_cost AS total,
+                    uod.status AS order_status,
                     osh.status
                 FROM 
                     user_order_details uod
