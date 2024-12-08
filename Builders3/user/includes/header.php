@@ -28,18 +28,30 @@ $array = $productobj->showproducts($keyword, $category_id);
     </div>
     <nav class="navbar">
         <ul>
+            <div class="links">
             <li><a href="Dashboard.php">Home</a></li>
             <li><a href="product.php">Products</a></li>
             <li><a href="orders.php">Orders</a></li>
             <li><a href="cart2.php"><i class="fa-solid fa-cart-shopping"></i><sup>1</sup></a></li>
-            <!-- search -->
+            </div>
             <form class="search-form" method="POST" role="search">
                 <input class="search-input" type="search" name="keyword" placeholder="Search">
                 <button class="search-button" type="submit">Search</button>
             </form>
         </ul>
     </nav>
-    <li class="logout"><a href="#" onclick="confirmLogout()"><i class="fa-solid fa-right-from-bracket"></i></a></li>
+    <div class="burger-menu">
+        <input type="checkbox" id="burger-checkbox">
+        <label for="burger-checkbox" class="burger-icon">
+            <span></span>
+            <span></span>
+            <span></span>
+        </label>
+        <ul class="burger-links">
+            <li><a href="profile.php">Edit Profile</a></li>
+            <li><a href="#" onclick="confirmLogout()">Logout</a></li>
+        </ul>
+    </div>
 </header>
 
 <script>

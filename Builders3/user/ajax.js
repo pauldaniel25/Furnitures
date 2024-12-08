@@ -69,3 +69,38 @@ $('.btn-view').on('click', function(e) {
     const orderId = $(this).data('id'); // Update this line
     viewOrderDetails(orderId);
 });
+
+// Function to load the Add Product form via AJAX
+function Review(productId) {
+    $.ajax({
+        type: 'GET',
+        url: 'review_modal.php',
+        data: { id: productId },
+        dataType: 'html',
+        beforeSend: function() {
+            // Show loading animation
+            $('.modal-container').html('<div class="loader"></div>');
+        },
+        success: function(view) {
+            // Inject HTML into modal container
+            $('.modal-container').html(view);
+            // Show modal if exists
+            if ($('#review-modal').length) {
+                $('#review-modal').modal('show');
+            } else {
+                console.error('Modal #review-modal not found');
+            }
+        },
+        error: function(xhr, status, error) {
+            console.error('Error loading modal:', error);
+            // Display error message
+            $('.modal-container').html('<p>Error loading modal.</p>');
+        }
+    });
+}
+// Event listener for 'Add Product' button
+$('.review-btn').on('click', function(e) {
+    e.preventDefault();
+    const productId = $(this).data('id');
+    Review(productId);
+});
