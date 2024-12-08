@@ -60,3 +60,26 @@
 .completed {
   color: green;
 }
+
+.filter-buttons {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.btn-filter {
+  padding: 8px 15px;
+  border: none;
+  border-radius: 5px;
+  background-color: #f0f0f0;
+  cursor: pointer;
+}
+
+.btn-filter.active {
+  background-color: #007bff;
+  color: #ffffff;
+}
+
+.btn-filter:hover {
+  background-color: #ddd;
+}

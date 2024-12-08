@@ -174,7 +174,9 @@ class Product {
         }
         function fetchRecord($recordID) {
             // SQL query to select a single product based on its ID.
-            $sql = "SELECT p.*, c.category_title AS Category FROM products p INNER JOIN categories c ON p.category_id = c.category_id WHERE product_id = :recordID;";
+            $sql = "SELECT p.*, c.category_title AS Category, CONCAT(s.firstName, ' ', s.lastName) AS Seller FROM products p
+             INNER JOIN categories c ON p.category_id = c.category_id
+             INNER JOIN seller s ON p.seller_id = s.id WHERE product_id = :recordID;";
     
             // Prepare the SQL statement for execution.
                    $query = $this->db->prepare($sql);
@@ -193,7 +195,7 @@ class Product {
         function recommendations($Category, $currentProductId) {
             // SQL query to recommend.
             $sql = "SELECT p.*, c.category_title AS Category FROM products p INNER JOIN 
-            categories c ON p.category_id = c.category_id WHERE p.category_id = :Category 
+            categories c ON p.category_id = c.category_id WHERE c.category_title = :Category 
             AND p.product_id != :currentProductId;";
             // Prepare the SQL statement for execution.
             $query = $this->db->prepare($sql);
@@ -227,6 +229,61 @@ class Product {
             $data = $query->fetchAll();
         }
         return $data;
+    }
+
+    function getProductRatings($product_id) {
+        $sql = "SELECT rating, review FROM ratings WHERE product_id = :product_id";
+        $query = $this->db->prepare($sql);
+        $query->bindParam(':product_id', $product_id);
+        $data = null;
+        
+        if ($query->execute()) {
+            $data = $query->fetchAll();
+            $count = count($data);
+            $average_rating = ($count > 0) ? array_sum(array_column($data, 'rating')) / $count : 0;
+            $rating_count = count($data);
+            $review_count = count(array_filter($data, function($row) {
+                return !empty($row['review']);
+            }));
+            
+            return [
+                'average_rating' => round($average_rating, 2),
+                'rating_count' => $rating_count,
+                'review_count' => $review_count
+            ];
+        }
+    }
+
+      function getProductReviews($product_id) {
+        $sql = "SELECT CONCAT(u.first_name, ' ', u.last_name) AS username, r.rating, r.review 
+                FROM ratings r 
+                INNER JOIN user u ON r.user_id = u.id 
+                WHERE r.product_id = :product_id";
+        $query = $this->db->prepare($sql);
+        $query->bindParam(':product_id', $product_id);
+        $query->execute();
+        return $query->fetchAll();
+    }
+
+    function addProductReview($product_id, $user_id, $rating, $review) {
+        // Check if user_id exists
+        $userCheck = "SELECT id FROM user WHERE id = :user_id";
+        $userQuery = $this->db->prepare($userCheck);
+        $userQuery->bindParam(':user_id', $user_id);
+        $userQuery->execute();
+        
+        if ($userQuery->rowCount() == 0) {
+            throw new Exception("Invalid user ID");
+        }
+        
+        $sql = "INSERT INTO ratings (product_id, user_id, rating, review) 
+                VALUES (:product_id, :user_id, :rating, :review)";
+        $query = $this->db->prepare($sql);
+        $query->bindParam(':product_id', $product_id);
+        $query->bindParam(':user_id', $user_id);
+        $query->bindParam(':rating', $rating);
+        $query->bindParam(':review', $review);
+        return $query->execute();
     }
         
 }
@@ -321,7 +378,8 @@ class Cart {
                         ci.quantity, 
                         p.product_name, 
                         p.product_image1, 
-                        p.product_price 
+                        p.product_price,
+                        p.seller_id
                     FROM 
                         cart_items ci 
                     JOIN 
@@ -411,13 +469,14 @@ class Order {
             throw new Exception("Order creation failed.");
         }
     }
-    public function addOrderItem($order_id, $product_id, $quantity, $product_price) {
-        $sql = "INSERT INTO user_order_details (user_order_id, product_id, quantity, status) 
-                VALUES (:order_id, :product_id, :quantity, 'pending')";
+    public function addOrderItem($order_id, $product_id, $quantity, $product_price, $seller_id) {
+        $sql = "INSERT INTO user_order_details (user_order_id, product_id, quantity, seller_id, status) 
+                VALUES (:order_id, :product_id, :quantity, :seller_id, 'pending')";
         $query = $this->db->prepare($sql);
         $query->bindParam(':order_id', $order_id);
         $query->bindParam(':product_id', $product_id);
         $query->bindParam(':quantity', $quantity);
+        $query->bindParam(':seller_id', $seller_id);
     
         return $query->execute();
     }
@@ -432,6 +491,7 @@ class Order {
                 uo.date AS date_ordered,
                 uo.total_cost AS total,
                 osh.status,
+                uod.status AS order_status,
                 osh.updated_at AS status_updated_at
               FROM 
                 order_status_history osh
@@ -460,18 +520,17 @@ class Order {
     }
 
 
-      public function updateOrderStatus(int $order_id, string $status): void {
+    public function updateOrderStatus(int $order_id, string $status): bool {
         $sql = "INSERT INTO order_status_history (user_order_id, status) VALUES (:order_id, :status)";
         $query = $this->db->prepare($sql);
         $query->bindParam(':order_id', $order_id);
         $query->bindParam(':status', $status);
-        $query->execute();
+        return $query->execute();
     }
     
-      public function cancelOrder($order_id) {
-        $this->updateOrderStatus($order_id, 'cancelled');
-        // Additional cancellation logic...
-      }
+    public function cancelOrder($order_id): bool {
+        return $this->updateOrderStatus($order_id, 'cancelled');
+    }
     
       public function completeOrder($order_id) {
         $this->updateOrderStatus($order_id, 'completed');
@@ -494,6 +553,7 @@ class Order {
                     uod.quantity,
                     uo.date AS date_ordered,
                     uo.total_cost AS total,
+                    uod.status AS order_status,
                     osh.status
                 FROM 
                     user_order_details uod
@@ -511,3 +571,5 @@ class Order {
     }
       
 }
+
+
