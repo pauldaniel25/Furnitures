@@ -1,106 +1,65 @@
-// Function to load the Add Product form via AJAX
-function addProduct(productId) {
+// Function to handle AJAX requests
+function ajaxRequest(method, url, data, callback) {
     $.ajax({
-        type: 'GET',
-        url: 'add-product.php',
-        data: { id: productId },
-        dataType: 'html',
-        beforeSend: function() {
-            // Show loading animation
-            $('.modal-container').html('<div class="loader"></div>');
-        },
-        success: function(view) {
-            // Inject HTML into modal container
-            $('.modal-container').html(view);
-            // Show modal if exists
-            if ($('#modal-add-product').length) {
-                $('#modal-add-product').modal('show');
-            } else {
-                console.error('Modal #modal-add-product not found');
-            }
-        },
-        error: function(xhr, status, error) {
-            console.error('Error loading modal:', error);
-            // Display error message
-            $('.modal-container').html('<p>Error loading modal.</p>');
-        }
+      type: method,
+      url: url,
+      data: data,
+      dataType: 'html',
+      beforeSend: function() {
+        $('.modal-container').html('<div class="loader"></div>');
+      },
+      success: function(response) {
+        callback(response);
+      },
+      error: function(xhr, status, error) {
+        console.error('Error:', error);
+        $('.modal-container').html('<p>Error loading modal.</p>');
+      }
     });
-}
-
-// Event listener for 'Add Product' button
-$('.add-cart-btn').on('click', function(e) {
+  }
+  
+  // Event listeners
+  $('.add-cart-btn').on('click', function(e) {
     e.preventDefault();
     const productId = $(this).data('id');
-    addProduct(productId);
-});
-
-// Function to load Order Details via AJAX
-function viewOrderDetails(orderId) {
-    $.ajax({
-        type: 'GET',
-        url: 'order_details.php',
-        data: { id: orderId },
-        dataType: 'html',
-        beforeSend: function() {
-            // Show loading animation
-            $('.modal-container').html('<div class="loader"></div>');
-        },
-        success: function(view) {
-            // Inject HTML into modal container
-            $('.modal-container').html(view);
-            // Show modal if exists
-            if ($('#order-details-modal').length) {
-                $('#order-details-modal').modal('show');
-            } else {
-                console.error('Modal #order-details-modal not found');
-            }
-        },
-        error: function(xhr, status, error) {
-            console.error('Error loading modal:', error);
-            // Display error message
-            $('.modal-container').html('<p>Error loading modal.</p>');
-        }
+    ajaxRequest('GET', 'add-product.php', { id: productId }, function(response) {
+      $('.modal-container').html(response);
+      $('#modal-add-product').modal('show');
     });
-}
-
-// Event listener for 'View Details' button
-$('.btn-view').on('click', function(e) {
+  });
+  
+  $('.btn-view').on('click', function(e) {
     e.preventDefault();
-    const orderId = $(this).data('id'); // Update this line
-    viewOrderDetails(orderId);
-});
-
-// Function to load the Add Product form via AJAX
-function Review(productId) {
-    $.ajax({
-        type: 'GET',
-        url: 'review_modal.php',
-        data: { id: productId },
-        dataType: 'html',
-        beforeSend: function() {
-            // Show loading animation
-            $('.modal-container').html('<div class="loader"></div>');
-        },
-        success: function(view) {
-            // Inject HTML into modal container
-            $('.modal-container').html(view);
-            // Show modal if exists
-            if ($('#review-modal').length) {
-                $('#review-modal').modal('show');
-            } else {
-                console.error('Modal #review-modal not found');
-            }
-        },
-        error: function(xhr, status, error) {
-            console.error('Error loading modal:', error);
-            // Display error message
-            $('.modal-container').html('<p>Error loading modal.</p>');
-        }
+    const orderId = $(this).data('id');
+    ajaxRequest('GET', 'order_details.php', { id: orderId }, function(response) {
+      $('.modal-container').html(response);
+      $('#order-details-modal').modal('show');
     });
-}
-// Event listener for 'Add Product' button
-$('.review-btn').on('click', function(e) {
+  });
+  
+  $('.review-btn').on('click', function(e) {
     e.preventDefault();
     const productId = $(this).data('id');
-    Review(productId);
-});
+    ajaxRequest('GET', 'review_modal.php', { id: productId }, function(response) {
+      $('.modal-container').html(response);
+      $('#review-modal').modal('show');
+    });
+  });
+  
+  // Cancel order button event listener
+  $('.btn-cancel').on('click', function(e) {
+    e.preventDefault();
+    const orderDetailId = $(this).data('id');
+    $.ajax({
+      type: 'POST',
+      url: '/cancel-order.php',
+      data: { order_detail_id: orderDetailId },
+      success: function(message) {
+        console.log(message);
+        $(this).text('Cancelled').prop('disabled', true);
+      },
+      error: function(xhr, status, error) {
+        console.error('Error:', error);
+      }
+    });
+  });

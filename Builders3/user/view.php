@@ -29,7 +29,7 @@ if ($id === false) {
         $product_image2 = htmlspecialchars($record['product_image2']);
         $product_image3 = htmlspecialchars($record['product_image3']);
         $seller_name = htmlspecialchars($record['Seller']);
-
+        $profile_img = htmlspecialchars($record['profile_img']);
         $arrayrecommend = $prodobj->recommendations($category_name, $id);
         $ratings = $prodobj->getProductRatings($id);
         $average_rating = $ratings['average_rating'];
@@ -119,9 +119,17 @@ require_once 'includes/header.php';
 
 </div>
 
-        <p class="price"><strong> ₱<?= number_format($product_price, 2) ?></strong></p>
-        <p class="status"><strong>Status:</strong> <?= ucfirst($status) ?></p>
-        <p class="seller-name"><strong>Seller:</strong> <?= $seller_name ?></p>
+<div class="seller">
+<p class="price"><strong>₱<?= number_format($product_price, 2) ?></strong></p>
+
+
+<p class="seller-info">
+  <img src="../seller/<?= $profile_img ?>" alt="<?= $seller_name ?>" class="seller-profile-img">
+  <strong>:</strong> <?= $seller_name ?>
+</p>
+</div>
+<p class="status"><strong>Status:</strong> <?= ucfirst($status) ?></p>
+
 
     
         <div class="rating">

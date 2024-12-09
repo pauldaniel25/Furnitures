@@ -41,7 +41,6 @@ if ($_GET['id']) {
   <p>Date Ordered: <?= $order_data['date_ordered'] ?></p>
   <p class="status">
   Status: <span class="<?= strtolower($order_data['order_status']) ?>"><?= $order_data['order_status']?></span>
-  <?= var_dump($order_data['order_status']) ?>
 </p>
   <p>Total Amount: $<?= number_format($order_data['total'], 2) ?></p>
 </div>

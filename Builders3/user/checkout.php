@@ -23,7 +23,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     // Add order items
     foreach ($cart_items as $item) {
-        $order->addOrderItem($order_id, $item['product_id'], $item['quantity'], $item['product_price'], $item['seller_id']);
+        $order->addOrderItem($order_id, $item['product_id'], $item['quantity'], $item['product_price'], $item['seller_id'], $user_id);
     }
 
     // Clear cart
