@@ -174,7 +174,7 @@ class Product {
         }
         function fetchRecord($recordID) {
             // SQL query to select a single product based on its ID.
-            $sql = "SELECT p.*, c.category_title AS Category, CONCAT(s.firstName, ' ', s.lastName) AS Seller FROM products p
+            $sql = "SELECT p.*, c.category_title AS Category, CONCAT(s.firstName, ' ', s.lastName) AS Seller, s.profile_img FROM products p
              INNER JOIN categories c ON p.category_id = c.category_id
              INNER JOIN seller s ON p.seller_id = s.id WHERE product_id = :recordID;";
     
@@ -469,20 +469,21 @@ class Order {
             throw new Exception("Order creation failed.");
         }
     }
-    public function addOrderItem($order_id, $product_id, $quantity, $product_price, $seller_id) {
-        $sql = "INSERT INTO user_order_details (user_order_id, product_id, quantity, seller_id, status) 
-                VALUES (:order_id, :product_id, :quantity, :seller_id, 'pending')";
+    public function addOrderItem($order_id, $product_id, $quantity, $product_price, $seller_id, $user_id) {
+        $sql = "INSERT INTO user_order_details (user_order_id, product_id, quantity, seller_id, user_id, status) 
+                VALUES (:order_id, :product_id, :quantity, :seller_id, :user_id, 'pending')";
         $query = $this->db->prepare($sql);
         $query->bindParam(':order_id', $order_id);
         $query->bindParam(':product_id', $product_id);
         $query->bindParam(':quantity', $quantity);
         $query->bindParam(':seller_id', $seller_id);
+        $query->bindParam(':user_id', $user_id);
     
         return $query->execute();
     }
 
     public function getOrders($user_id, $limit = null, $offset = 0) {
-        $sql = "SELECT DISTINCT 
+        $sql = "SELECT 
                 uo.id AS order_id,
                 uod.id AS order_details_id,
                 uod.quantity,
@@ -490,38 +491,35 @@ class Order {
                 p.product_image1,
                 uo.date AS date_ordered,
                 uo.total_cost AS total,
-                osh.status,
-                uod.status AS order_status,
-                osh.updated_at AS status_updated_at
+                uod.status AS order_status
               FROM 
-                order_status_history osh
-                INNER JOIN user_order uo ON osh.user_order_id = uo.id
+                user_order uo
                 INNER JOIN user_order_details uod ON uo.id = uod.user_order_id
                 INNER JOIN products p ON uod.product_id = p.product_id
               WHERE 
                 uo.user_id = :user_id
               ORDER BY 
                 uo.date DESC";
-    
+        
         if ($limit !== null) {
             $sql .= " LIMIT :limit OFFSET :offset";
         }
-    
+        
         $query = $this->db->prepare($sql);
         $query->bindParam(':user_id', $user_id);
-    
+        
         if ($limit !== null) {
             $query->bindParam(':limit', $limit, PDO::PARAM_INT);
             $query->bindParam(':offset', $offset, PDO::PARAM_INT);
         }
-    
+        
         $query->execute();
         return $query->fetchAll(PDO::FETCH_ASSOC);
     }
 
 
     public function updateOrderStatus(int $order_id, string $status): bool {
-        $sql = "INSERT INTO order_status_history (user_order_id, status) VALUES (:order_id, :status)";
+        $sql = "UPDATE user_order_details SET status = :status WHERE id = :order_id";
         $query = $this->db->prepare($sql);
         $query->bindParam(':order_id', $order_id);
         $query->bindParam(':status', $status);
@@ -529,7 +527,7 @@ class Order {
     }
     
     public function cancelOrder($order_id): bool {
-        return $this->updateOrderStatus($order_id, 'cancelled');
+        return $this->updateOrderStatus($order_id, 'canceled');
     }
     
       public function completeOrder($order_id) {
@@ -553,20 +551,18 @@ class Order {
                     uod.quantity,
                     uo.date AS date_ordered,
                     uo.total_cost AS total,
-                    uod.status AS order_status,
-                    osh.status
+                    uod.status AS order_status
                 FROM 
                     user_order_details uod
                     INNER JOIN user_order uo ON uod.user_order_id = uo.id
-                    INNER JOIN order_status_history osh ON uo.id = osh.user_order_id
                     INNER JOIN products p ON uod.product_id = p.product_id
                 WHERE 
                     uod.id = :id";
-    
+        
         $query = $this->db->prepare($sql);
         $query->bindParam(':id', $id);
         $query->execute();
-    
+        
         return $query->fetch(PDO::FETCH_ASSOC);
     }
       

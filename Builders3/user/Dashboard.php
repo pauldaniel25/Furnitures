@@ -1,6 +1,10 @@
 <?php
 session_start();
-
+$user_id = $_SESSION['user_id'];
+if (!isset($_SESSION['user_id'])) {
+    header('Location: index.php');
+    exit;
+}
 if (isset($_SESSION['success'])) {
     echo '<div class="alert alert-success text-center">' . $_SESSION['success'] . '</div>';
     unset($_SESSION['success']);
