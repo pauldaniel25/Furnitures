@@ -519,7 +519,7 @@ class Order {
 
 
     public function updateOrderStatus(int $order_id, string $status): bool {
-        $sql = "INSERT INTO order_status_history (user_order_id, status) VALUES (:order_id, :status)";
+        $sql = "UPDATE user_order_details SET status = :status WHERE id = :order_id";
         $query = $this->db->prepare($sql);
         $query->bindParam(':order_id', $order_id);
         $query->bindParam(':status', $status);
@@ -527,7 +527,7 @@ class Order {
     }
     
     public function cancelOrder($order_id): bool {
-        return $this->updateOrderStatus($order_id, 'cancelled');
+        return $this->updateOrderStatus($order_id, 'canceled');
     }
     
       public function completeOrder($order_id) {

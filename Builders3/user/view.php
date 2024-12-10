@@ -4,7 +4,7 @@ session_start();
 require_once('function.php');
 require_once('classes.php');
 if (!isset($_SESSION['user_id'])) {
-    header('Location: login.php');
+    header('Location: index.php');
     exit;
 }
 $prodobj = new Product();

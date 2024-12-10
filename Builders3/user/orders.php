@@ -70,13 +70,17 @@ $orders = $order->getOrders($_SESSION['user_id'], $items_per_page, $offset);
                                 <td><?= $order['date_ordered']?></td>
                                 <td>$<?= number_format($order['total'], 2)?></td>
                                 <td>
-                                    <span class="status <?= $order['order_status'] ?>">
-                                        <?= $order['order_status'] ?>
-                                    </span>
+                                <span class="status <?= $order['order_status'] ?>" data-id="<?= $order['order_details_id'] ?>">
+                                    <?= $order['order_status'] ?>
+                                </span>
                                 </td>
                                 <td>
-                                <button class="btn-cancel" data-id="<?= $order['order_details_id'] ?>">Cancel</button>
-                                    <button class="btn-view" data-id="<?= $order['order_details_id'] ?>">View Details</button>
+                                <?php if ($order['order_status'] == 'Canceled' || $order['order_status'] == 'Completed') { ?>
+                                    <button class="btn-remove" data-id="<?= $order['order_details_id'] ?>">Remove</button>
+                                <?php } else { ?>
+                                    <button class="btn-cancel" data-id="<?= $order['order_details_id'] ?>">Cancel</button>
+                                <?php } ?>
+                                <button class="btn-view" data-id="<?= $order['order_details_id'] ?>">View Details</button>
                                 </td>
                             </tr>
                         <?php endforeach; ?>

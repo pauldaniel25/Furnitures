@@ -35,19 +35,19 @@ body {
     font-weight: bold;
 }
 
-.pending {
+.Pending {
     color: orange;
 }
 
-.canceled {
+.Canceled {
     color: red;
 }
 
-.completed {
+.Completed {
     color: green;
 }
 
-.btn-cancel, .btn-view {
+.btn-cancel, .btn-view, .btn-remove {
     padding: 8px 12px;
     border: none;
     border-radius: 5px;
@@ -55,12 +55,13 @@ body {
 }
 
 
-.btn-cancel {
+.btn-cancel, .btn-remove{
     background-color: #FF0000;
     color: #fff;
+    width: 5.5em;
 }
 
-.btn-cancel:hover {
+.btn-cancel:hover, .btn-remove:hover {
     background-color: #CC0000;
 }
 

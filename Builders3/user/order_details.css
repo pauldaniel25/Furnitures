@@ -49,15 +49,15 @@
   text-transform: capitalize;
 }
 
-.pending {
+.Pending {
   color: orange;
 }
 
-.cancelled {
+.Canceled {
   color: red;
 }
 
-.completed {
+.Completed {
   color: green;
 }
 

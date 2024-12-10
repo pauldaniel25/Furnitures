@@ -46,20 +46,45 @@ function ajaxRequest(method, url, data, callback) {
     });
   });
   
-  // Cancel order button event listener
-  $('.btn-cancel').on('click', function(e) {
-    e.preventDefault();
-    const orderDetailId = $(this).data('id');
+  function cancelOrderAjaxRequest(method, url, data, callback) {
     $.ajax({
-      type: 'POST',
-      url: '/cancel-order.php',
-      data: { order_detail_id: orderDetailId },
-      success: function(message) {
-        console.log(message);
-        $(this).text('Cancelled').prop('disabled', true);
+      type: method,
+      url: url,
+      data: JSON.stringify(data),
+      contentType: 'application/json',
+      dataType: 'json',
+      success: function(response) {
+        console.log('Success:', response);
+        callback(response);
       },
       error: function(xhr, status, error) {
         console.error('Error:', error);
+        console.log('XHR:', xhr);
+        console.log('Status:', status);
+        console.log('Response Text:', xhr.responseText);
+        alert(`Error: ${error}\nStatus: ${status}\nResponse: ${xhr.responseText}`);
+      }
+    });
+  }
+  
+  $(document).on('click', '.btn-cancel', function(e) {
+    e.preventDefault();
+    e.stopPropagation();
+    const orderId = $(this).data('id');
+    const statusElement = $(`.status[data-id="${orderId}"]`);
+  
+    cancelOrderAjaxRequest('POST', 'ajax-handler/cancel-order.php', { orderId: orderId }, function(response) {
+      if (response.success) {
+        statusElement
+          .text('Canceled')
+          .addClass('Canceled') // Optional: Add class for styling
+        ;
+        $(`.btn-cancel[data-id="${orderId}"]`)
+          .text('Canceled')
+          .prop('disabled', true);
+      } else {
+        console.error('Cancel order failed:', response.message);
+        alert(`Cancel order failed: ${response.message}`);
       }
     });
   });
