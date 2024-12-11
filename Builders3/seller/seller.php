@@ -35,6 +35,12 @@ if (isset($_SESSION['email'])) {
 
         // Fetch orders with search filters applied
         $ordersQuery = $sellerDashboard->getOrders($seller_id, $searchTerm, $searchStatus);
+        
+        // Fetch new orders count
+        $newOrdersCount = $sellerDashboard->getNewOrdersCount($seller_id);
+
+        // Fetch new orders details
+        $newOrdersDetails = $sellerDashboard->getNewOrdersDetails($seller_id);
     } else {
         $fullName = 'User not found';
         $productCount = 0;
@@ -110,8 +116,26 @@ if (isset($_SESSION['email'])) {
         </div>
 
         <div class="profile">
-            <!-- Notification Icon (remains visible) -->
-            <i class="fa-solid fa-bell" style="font-size: 25px; cursor: pointer;"></i>
+            <!-- Notification Icon with Dropdown -->
+            <div class="dropdown">
+                <i class="fa-solid fa-bell" style="font-size: 25px; cursor: pointer;" id="notificationDropdown" data-bs-toggle="dropdown" aria-expanded="false"></i>
+                <?php if ($newOrdersCount > 0): ?>
+                    <span class="badge bg-danger" style="position: absolute; top: 10px; right: 10px;"><?php echo $newOrdersCount; ?></span>
+                <?php endif; ?>
+                <ul class="dropdown-menu" aria-labelledby="notificationDropdown">
+                    <?php if ($newOrdersCount > 0): ?>
+                        <?php foreach ($newOrdersDetails as $order): ?>
+                            <li>
+                                <a class="dropdown-item" href="order_details.php?order_id=<?php echo $order['user_order_id']; ?>">
+                                    <?php echo $order['user_first_name'] . ' ' . $order['user_last_name']; ?> ordered <?php echo $order['quantity']; ?> of <?php echo $order['product_name']; ?>
+                                </a>
+                            </li>
+                        <?php endforeach; ?>
+                    <?php else: ?>
+                        <li><a class="dropdown-item" href="#">No new orders</a></li>
+                    <?php endif; ?>
+                </ul>
+            </div>
 
             <!-- Profile Image Click to Toggle Dropdown -->
             <div class="dropdown">
@@ -200,34 +224,38 @@ if (isset($_SESSION['email'])) {
                     </td>
                 </tr>";
 
-            // Modal for Order Details
-            echo "<div class='modal fade' id='orderModal{$order['user_order_id']}' tabindex='-1' aria-labelledby='orderModalLabel' aria-hidden='true'>
-                    <div class='modal-dialog'>
-                        <div class='modal-content'>
-                            <div class='modal-header'>
-                                <h5 class='modal-title' id='orderModalLabel'>Order Details - {$productName}</h5>
-                                <button type='button' class='btn-close' data-bs-dismiss='modal' aria-label='Close'></button>
+// ...existing code...
+echo "<div class='modal fade' id='orderModal{$order['user_order_id']}' tabindex='-1' aria-labelledby='orderModalLabel' aria-hidden='true'>
+        <div class='modal-dialog modal-md'>
+            <div class='modal-content'>
+                <div class='modal-header'>
+                    <h5 class='modal-title' id='orderModalLabel'>Order Details - {$productName}</h5>
+                    <button type='button' class='btn-close' data-bs-dismiss='modal' aria-label='Close'></button>
+                </div>
+                <div class='modal-body'>
+                    <div class='row'>
+                        <div class='col-md-6'>
+                            <img class='img-fluid rounded' src='product_images2/{$productImage}' alt='Product Image' style='width: 100%; height: auto; object-fit: cover; aspect-ratio: 1 / 1;'>
+                        </div>
+                        <div class='col-md-6 d-flex flex-column justify-content-center'>
+                            <h5 class='card-title' style='font-size: 1.5rem; margin-bottom: 1rem;'>{$productName}</h5>
+                            <p class='card-text' style='font-size: 1.2rem; margin-bottom: 1rem;'>
+                                <strong>Customer:</strong> {$firstName} {$lastName}<br>
+                                <strong>Quantity:</strong> {$quantity}<br>
+                                <strong>Status:</strong> {$status}<br>
+                                <strong>Total Price:</strong> $" . number_format($total, 2) . "<br>
+                            </p>
+                            <div class='progress' style='height: 30px; margin-bottom: 1rem;'>
+                                <div class='progress-bar progress-bar-striped progress-bar-animated " . ($status == 'pending' ? 'bg-warning' : ($status == 'ongoing' ? 'bg-info' : 'bg-success')) . "' role='progressbar' style='width: " . ($status == 'pending' ? '33%' : ($status == 'ongoing' ? '66%' : '100%')) . ";' aria-valuenow='" . ($status == 'pending' ? '33' : ($status == 'ongoing' ? '66' : '100')) . "' aria-valuemin='0' aria-valuemax='100'>" . ucfirst($status) . "</div>
                             </div>
-                            <div class='modal-body'>
-                                <div class='card' style='width: 18rem;'>
-                                    <img class='card-img-top' src='product_images2/{$productImage}' alt='Product Image'>
-                                    <div class='card-body'>
-                                        <h5 class='card-title'>{$productName}</h5>
-                                        <p class='card-text'>
-                                            <strong>Customer:</strong> {$firstName} {$lastName}<br>
-                                            <strong>Quantity:</strong> {$quantity}<br>
-                                            <strong>Status:</strong> {$status}<br>
-                                            <strong>Total Price:</strong> $" . number_format($total, 2) . "<br>
-                                        </p>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class='modal-footer'>
-                                <button type='button' class='btn btn-secondary' data-bs-dismiss='modal'>Close</button>
-                            </div>
+                            <button type='button' class='btn btn-secondary' data-bs-dismiss='modal'>Close</button>
                         </div>
                     </div>
-                </div>";
+                </div>
+            </div>
+        </div>
+    </div>";
+// ...existing code...
 
             // Modal for Order Update
             echo "<div class='modal fade' id='updateModal{$order['user_order_id']}' tabindex='-1' aria-labelledby='updateModalLabel' aria-hidden='true'>

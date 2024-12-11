@@ -10,10 +10,11 @@ body{
     background: #e5e7eb;
     position: relative;   
     display: flex;
+    color: #343a40; /* Adjust text color */
 }
 
 #menu {
-background-color: #378370;
+background-color: #343a40;
 width: 300px;
 height: 100%;
 position: fixed;
@@ -25,7 +26,7 @@ left: 0;
 #menu .logo{
     display: flex;
     align-items: center;
-    color: white;
+    color: #ffffff; /* Adjust text color */
     padding: 30px 0 0 30px;
 }
 
@@ -47,7 +48,7 @@ transition: 0.5s ease;
 }
 
 #menu .items li:hover{
-background:black;
+background: #343a40;
 cursor: pointer;
 }
 
@@ -69,7 +70,7 @@ margin: 0 10px 0 25px;
 
 #menu .items li:hover i,
 #menu .items li:hover a{
-    color: #40ffcf;
+    color: #ffffff;
 
 
 }
@@ -92,9 +93,9 @@ margin: 0 10px 0 25px;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    background: #fff;
+    background: #ffffff;
     padding: 15px 30px;
-    border-bottom: 3px solid #40ffcf;
+    border-bottom: 3px solid #343a40;
     position: fixed;
     width: calc(100% - 300px);
 
@@ -117,7 +118,8 @@ margin: 0 10px 0 25px;
 #interface .navigation .search input{
     border: none;
     outline: none;
-    font-size: 15px
+    font-size: 15px;
+    color: #343a40; /* Adjust text color */
 }
 
 #interface .navigation .profile{
@@ -130,6 +132,7 @@ margin: 0 10px 0 25px;
     margin-right: 20px;
     font-size: 19px;
     font-weight: 400;
+    color: #343a40; /* Adjust text color */
 }
 
 #interface .navigation .profile img{
@@ -154,7 +157,7 @@ border-radius: 50%;
 }
 
 .i-name{
-    color: #49c4a5;
+    color: #343a40; /* Adjust text color */
     padding: 30px 30px 0 30px;
     font-size: 25px;
     font-weight: 700;
@@ -180,25 +183,26 @@ border-radius: 50%;
 }
 
 .values .val-box i{
-    color:#fff;
+    color:#ffffff;
     font-size: 25px;
     height: 60px;
     width: 60px;
     line-height: 60px;
     border-radius: 50%;
     text-align: center;
-    background-color:  #49c4a5;
+    background-color:  #343a40;
     margin-right: 15px;
 }
 
 .values .val-box h3{
     font-size: 18px;
     font-weight: 600;
+    color: #343a40; /* Adjust text color */
 }
 
 .values .val-box span{
     font-size: 15px;
-    color:#828997 ;
+    color: #343a40; /* Adjust text color */
 }
 
 .board{
@@ -220,12 +224,13 @@ margin-right: 15px;
 .board h5{
     font-weight: 600;
     font-size: 14px;
+    color: #343a40; /* Adjust text color */
 }
 
 .board p{
     font-weight: 400;
     font-size: 13px;
-    color: #787d8d;
+    color: #343a40; /* Adjust text color */
 }
 
 
@@ -251,10 +256,12 @@ thead td{
     background: #F9FAFB;
     text-align: start;
     padding: 15px;
+    color: #343a40; /* Adjust text color */
 }
 
 tbody tr td{
     padding: 10px 15px;
+    color: #343a40; /* Adjust text color */
 }
 
 .active p{
@@ -262,20 +269,15 @@ tbody tr td{
     padding: 2px 10px;
     display: inline-block;
     border-radius: 40px;
-    color: #2b2b2b;
+    color: #343a40; /* Adjust text color */
 }
 
 .edit a{
     text-decoration: none;
     font-size: 14px;
-    color: #378370;
+    color: #343a40;
     font-weight: 600;
 }
-
-
-
-
-/*charts*/
 
 .charts{
     display: grid;
@@ -301,24 +303,14 @@ tbody tr td{
     justify-content: center;
     font-size: 22px;
     font-weight: 600;
+    color: #343a40; /* Adjust text color */
 }
-
 
 .search_button{
 border-style: none;
 color: none;
 background-color: none;
 }
-
-
-
-
-
-
-
-
-
-
 
 /* search bar and pending dropdown */
 /* Apply consistent styling to both the search input and dropdown */
@@ -340,28 +332,17 @@ background-color: none;
 .search_button {
     padding: 8px 12px;
     font-size: 16px;
-    background-color: #ffffff; /* Match your theme color */
-    color: rgb(0, 0, 0);
-    
+    background-color: #8b9467; /* Adjust button color */
+    color: #ffffff;
     border-radius: 5px;
-    
     cursor: pointer;
     margin-left: 5px;  /* Space between the input field and button */
 }
 
 /* Hover effect for the search button */
 .search_button:hover {
-    background-color: #20c56a;
+    background-color: #343a40;
 }
-
-
-
-
-
-
-
-
-
 
 /* Increase size of the image inside the modal and make it square */
 .product-image {
