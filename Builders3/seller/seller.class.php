@@ -227,6 +227,38 @@ public function updateOrderStatus($order_id, $new_status) {
         return $subscriptions;
     }
 
-  
+    public function getNewOrdersCount($seller_id) {
+        $query = "SELECT COUNT(*) as new_orders_count FROM user_order_details WHERE seller_id = ? AND status = 'pending'";
+        $stmt = $this->conn->prepare($query);
+        $stmt->bind_param("i", $seller_id);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $row = $result->fetch_assoc();
+        return $row['new_orders_count'];
+    }
+
+    public function getNewOrdersDetails($seller_id) {
+        $query = "
+            SELECT 
+                u.first_name AS user_first_name, 
+                u.last_name AS user_last_name, 
+                p.product_name, 
+                uod.quantity, 
+                uod.id AS user_order_id
+            FROM 
+                user_order_details AS uod
+            JOIN 
+                products AS p ON uod.product_id = p.product_id
+            JOIN 
+                user AS u ON uod.user_id = u.id
+            WHERE 
+                uod.seller_id = ? AND uod.status = 'pending'
+        ";
+        $stmt = $this->conn->prepare($query);
+        $stmt->bind_param("i", $seller_id);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        return $result->fetch_all(MYSQLI_ASSOC);
+    }
 }
 ?>
