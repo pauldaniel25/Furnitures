@@ -3,7 +3,10 @@ require_once 'classes.php';
 
 session_start();
 $user_id = $_SESSION['user_id'];
-
+if (!isset($_SESSION['user_id'])) {
+    header('Location: index.php');
+    exit;
+}
 $cart = new Cart();
 
 // Get cart items
@@ -23,7 +26,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     // Add order items
     foreach ($cart_items as $item) {
-        $order->addOrderItem($order_id, $item['product_id'], $item['quantity'], $item['product_price'], $item['seller_id']);
+        $order->addOrderItem($order_id, $item['product_id'], $item['quantity'], $item['product_price'], $item['seller_id'], $user_id);
     }
 
     // Clear cart
