@@ -32,6 +32,17 @@ if (isset($_SESSION['email'])) {
                 echo "<script>alert('Error updating subscription');</script>";
             }
         }
+
+        // Handle subscription cancellation
+        if (isset($_POST['cancel_subscription'])) {
+            if ($sellerDashboard->updateSubscription($seller_id, null)) {
+                echo "<script>alert('Subscription cancelled successfully');</script>";
+                header('Location: Subscription.php');
+                exit();
+            } else {
+                echo "<script>alert('Error cancelling subscription');</script>";
+            }
+        }
     } else {
         $fullName = 'Guest';
     }
@@ -64,6 +75,12 @@ if (isset($_SESSION['email'])) {
 
         .modal-header {
             text-align: center;
+            border-bottom: none;
+        }
+
+        .modal-title {
+            font-size: 24px;
+            font-weight: bold;
         }
 
         .modal-body {
@@ -77,6 +94,7 @@ if (isset($_SESSION['email'])) {
             display: flex;
             justify-content: center; /* Center the button horizontally */
             padding-top: 10px;
+            border-top: none;
         }
 
         .modal-footer .btn {
@@ -98,8 +116,6 @@ if (isset($_SESSION['email'])) {
         }
 
         .btn {
-            background-color: #007bff;
-            color: white;
             padding: 10px 20px;
             border: none;
             border-radius: 5px;
@@ -107,8 +123,32 @@ if (isset($_SESSION['email'])) {
             cursor: pointer;
         }
 
-        .btn:hover {
+        .btn-primary {
+            background-color: #007bff;
+            color: #fff;
+        }
+
+        .btn-primary:hover {
             background-color: #0056b3;
+        }
+
+        .btn-danger {
+            background-color: #dc3545;
+            color: #fff;
+        }
+
+        .btn-danger:hover {
+            background-color: #c82333;
+        }
+
+        .alert-info {
+            background-color: #d1ecf1;
+            color: #0c5460;
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            width: 100%;
+            text-align: center;
         }
     </style>
 </head>
@@ -173,11 +213,32 @@ if (isset($_SESSION['email'])) {
                     </form>
                 </div>
                 <div class="modal-footer">
-                   
+                    <?php if ($current_subscription_name): ?>
+                        <form action="" method="post" onsubmit="return confirmCancel();">
+                            <button type="submit" name="cancel_subscription" class="btn btn-danger">Cancel Subscription</button>
+                        </form>
+                    <?php endif; ?>
                 </div>
             </div>
         </div>
     </div>
+    </div>
+</section>
+
+<!-- Footer Section -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/apexcharts/3.49.0/apexcharts.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    function confirmCancel() {
+        return confirm('Are you sure you want to cancel your subscription?');
+    }
+</script>
+
+
+
+</body>
+</html>
+
 </section>
 
 <!-- Footer Section -->
