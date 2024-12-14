@@ -152,9 +152,10 @@ class Product {
             return $count > 0;
         }
         function showproducts($keyword = '', $category_id = ''){
-            $sql = "SELECT p.*, c.category_title AS Category 
+            $sql = "SELECT p.*, c.category_title AS Category, CONCAT(s.firstName, ' ', s.lastName) AS Seller, s.profile_img
                     FROM products p 
                     INNER JOIN categories c ON p.category_id = c.category_id 
+                    INNER JOIN seller s ON p.seller_id = s.id
                     WHERE (p.product_name LIKE :keyword OR p.product_keywords LIKE :keyword) 
                     AND (p.category_id = :category_id OR :category_id = '') 
                     ORDER BY p.product_name ASC;";

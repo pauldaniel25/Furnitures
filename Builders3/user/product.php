@@ -45,14 +45,14 @@ $array = $productobj->showproducts($keyword, $category_id);
 
 <body>
     <!-- Header -->
-    <?php require_once 'includes/header.php'; ?>
+
+ <?php
+require_once 'includes/header.php';
+?>
 
 
-    <!-- Modal Container -->
-    <div class="modal-container"></div>
-
-    <!-- Category Navigation -->
-    <nav class="category-links">
+<!-- Category Navigation -->
+<nav class="category-links">
         <ul class="d-flex justify-content-around align-items-center">
             <li class="nav-item"><a class="nav-link <?= !$category_id ? 'active' : '' ?>" href="product.php">All Categories</a></li>
             <?php foreach ($categories as $category) { ?>
@@ -63,6 +63,13 @@ $array = $productobj->showproducts($keyword, $category_id);
             <?php } ?>
         </ul>
     </nav>
+
+
+
+    <!-- Modal Container -->
+    <div class="modal-container"></div>
+
+    
 
     <!-- Product Listing -->
     <main class="product-container" id="product-list">
@@ -78,8 +85,8 @@ $array = $productobj->showproducts($keyword, $category_id);
                         <h2 class="product-name"><?= htmlspecialchars($arr['product_name']) ?></h2>
                         <p class="product-price">$<?= htmlspecialchars($arr['product_price']) ?></p>
                         <p class="product-category">Category: <?= htmlspecialchars($arr['Category']) ?></p>
-                        <p class="product-quantity">Quantity: 5</p>
-                        <p class="product-seller">Seller: <?= htmlspecialchars($arr['seller_name']) ?></p>
+                        <p class="product-quantity">Quantity:<?= $arr['quantity'] ?></p>
+                        <p class="product-seller">Seller: <?= htmlspecialchars($arr['Seller']) ?></p>
                         <div class="button-group">
                             <button type="button" class="btn add-cart-btn btn-custom" data-id="<?= $arr['product_id'] ?>" id="add-to-cart">Add to Cart</button>
                             <a href="view.php?id=<?= $arr['product_id']?>" class="btn btn-custom">View More</a>

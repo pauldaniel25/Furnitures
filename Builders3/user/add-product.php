@@ -7,7 +7,7 @@ require_once('classes.php');
 $product_id = $_GET['id'] ?? null;  // Get the product ID from the query string
 
 // Initialize product variables
-$product_name = $product_image1 = $product_price = ''; 
+ $product_name = $product_image1 = $product_price = ''; 
 
 if ($product_id) {
     $prodobj = new Product();
@@ -17,6 +17,7 @@ if ($product_id) {
         $product_name = htmlspecialchars($record['product_name']);
         $product_image1 = htmlspecialchars($record['product_image1']);
         $product_price = htmlspecialchars($record['product_price']);
+        $available_quantity = $record['quantity'];
     } else {
         echo 'No product found';
         exit;
@@ -31,7 +32,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         echo 'Invalid quantity';
         exit;
     }
-
+    
     $cart = new Cart();
     try {
         $cart->addtocart($product_id, $quantity, $user_id);
@@ -61,11 +62,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                             <img src="../seller/product_images2/<?= $product_image1 ?>" alt="<?= $product_name ?>" class="img-fluid">
                         </div>
 
-                        <!-- Right section: Quantity Picker and Total Price -->
                         <div class="modal-details-container" style="flex: 1;">
                             <div class="mb-3">
-                                <label for="quantity" class="form-label">Quantity</label>
-                                <input type="number" class="form-control" id="quantity" name="quantity" value="1" min="1">
+                                <label for="quantity" class="form-label">Quantity (Available: <?= $available_quantity ?>)</label>
+                                <input type="number" class="form-control" id="quantity" name="quantity" value="1" min="1" max="<?= $available_quantity ?>">
                             </div>
 
                             <div class="mb-3">
@@ -86,15 +86,24 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 </div>
 
 <script>
-    const quantityInput = document.getElementById('quantity');
-    const totalPriceInput = document.getElementById('total-price');
-    const basePrice = <?= $product_price ?>;
+const quantityInput = document.getElementById('quantity');
+const totalPriceInput = document.getElementById('total-price');
+const basePrice = <?= $product_price ?>;
+const availableQuantity = <?= $available_quantity ?>;
 
-    quantityInput.addEventListener('input', updatePrice);
+quantityInput.max = availableQuantity; // Add this line
 
-    function updatePrice() {
-        const quantity = parseInt(quantityInput.value);
-        const totalPrice = basePrice * quantity;
-        totalPriceInput.value = `$${totalPrice.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+quantityInput.addEventListener('input', updatePrice);
+
+function updatePrice() {
+    const quantity = parseInt(quantityInput.value);
+    
+    if (quantity > availableQuantity) {
+        quantityInput.value = availableQuantity;
+        alert('Quantity exceeds available stock.');
     }
+    
+    const totalPrice = basePrice * Math.min(quantity, availableQuantity);
+    totalPriceInput.value = `$${totalPrice.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+}
 </script>
