@@ -6,6 +6,7 @@ class User {
     public $First_Name = '';
     public $Last_Name = '';
     public $barangay_id = '';
+    public $contact_number ='';
     public $Email = '';
     public $password = '';
 
@@ -15,24 +16,25 @@ function __construct(){
     $database = new Database();
     $this->db = $database->connect();
     }
-    public function signUp($First_Name, $Last_Name, $barangay_id, $Email, $password) {
+    public function signUp($First_Name, $Last_Name, $barangay_id, $contact_number, $Email, $password) {
         $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
     
         // Use lowercase column names to match the table definition
-        $query = "INSERT INTO user (first_name, last_name, barangay_id, email, password) VALUES (:first_name, :last_name, :barangay_id, :email, :password)";
+        $query = "INSERT INTO user (first_name, last_name, barangay_id , contact_number, email, password) VALUES (:first_name, :last_name, :barangay_id, :contact_number, :email, :password)";
         $stmt = $this->db->prepare($query);
         $stmt->bindParam(':first_name', $First_Name);
         $stmt->bindParam(':last_name', $Last_Name);
         $stmt->bindParam(':barangay_id', $barangay_id);
+        $stmt->bindParam(':contact_number', $contact_number);
         $stmt->bindParam(':email', $Email);
         $stmt->bindParam(':password', $hashedPassword);
-    
+
         if ($stmt->execute()) {
             return "User registered successfully!";
         } else {
             return "Error: User registration failed.";
         }
-    }
+        }
     function getbarangay(){
         $sql = "SELECT id, Brgy_Name FROM Barangay"; 
         $query = $this->db->prepare($sql);

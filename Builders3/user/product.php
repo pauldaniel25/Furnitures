@@ -53,16 +53,16 @@ require_once 'includes/header.php';
 
 <!-- Category Navigation -->
 <nav class="category-links">
-        <ul class="d-flex justify-content-around align-items-center">
-            <li class="nav-item"><a class="nav-link <?= !$category_id ? 'active' : '' ?>" href="product.php">All Categories</a></li>
-            <?php foreach ($categories as $category) { ?>
-                <li class="nav-item">
-                    <a class="nav-link <?= ($category_id == $category['category_id']) ? 'active' : '' ?>" 
-                       href="product.php?category_id=<?= $category['category_id'] ?>"><?= $category['category_title'] ?></a>
-                </li>
-            <?php } ?>
-        </ul>
-    </nav>
+    <ul class="d-flex justify-content-around align-items-center">
+        <li class="nav-item"><a class="nav-link <?= !$category_id ? 'active' : '' ?>" href="product.php">All Categories</a></li>
+        <?php foreach ($categories as $category) { ?>
+            <li class="nav-item">
+                <a class="nav-link <?= ($category_id == $category['category_id']) ? 'active' : '' ?>" 
+                   href="product.php?category_id=<?= $category['category_id'] ?>"><?= $category['category_title'] ?></a>
+            </li>
+        <?php } ?>
+    </ul>
+</nav>
 
 
 

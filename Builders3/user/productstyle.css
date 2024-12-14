@@ -6,7 +6,6 @@ body {
   background-color: #f8f9fa;
 }
 
-
 /* Navbar styling */
 .navbar {
   background-color: #343a40;
@@ -31,7 +30,7 @@ body {
 /* Category links */
 .category-links {
   background-color: #343a40;
-  padding: 0.5rem 0;
+  padding: 10px 0;
 }
 
 .category-links ul {
@@ -42,17 +41,26 @@ body {
   justify-content: space-around;
 }
 
-.category-links li {
-  margin: 0 2rem;
+.category-links .nav-item {
+  margin: 0 10px;
 }
 
-.category-links a {
-  color: #fff;
+.category-links .nav-link {
   text-decoration: none;
+  color: #fff;
+  padding: 10px 15px;
+  border-radius: 5px;
+  transition: background-color 0.3s, color 0.3s;
 }
 
-.category-links a:hover {
-  color: #ccc;
+.category-links .nav-link.active {
+  background-color: #8B9467;
+  color: #fff;
+}
+
+.category-links .nav-link:hover {
+  background-color: #8B9467;
+  color: #fff;
 }
 
 /* Search bar styling */
