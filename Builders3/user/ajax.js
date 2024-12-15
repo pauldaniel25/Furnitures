@@ -88,3 +88,43 @@ function ajaxRequest(method, url, data, callback) {
       }
     });
   });
+
+
+
+
+  // Function to handle AJAX requests
+function sendAjaxRequest(method, url, data, callback) {
+  $.ajax({
+      type: method,
+      url: url,
+      data: JSON.stringify(data),
+      contentType: 'application/json',
+      dataType: 'json',
+      success: function(response) {
+          callback(response);
+      },
+      error: function(xhr, status, error) {
+          console.error('Error:', error);
+          console.log('XHR:', xhr);
+          console.log('Status:', status);
+          console.log('Response Text:', xhr.responseText);
+          alert(`Error: ${error}\nStatus: ${status}\nResponse: ${xhr.responseText}`);
+      }
+  });
+}
+
+// Event listeners
+$(document).on('click', '.btn-remove', function(e) {
+  e.preventDefault();
+  const orderId = $(this).data('id');
+  if (confirm('Are you sure you want to remove this order?')) {
+      sendAjaxRequest('POST', 'remove_order.php', { order_id: orderId }, function(response) {
+          if (response.success) {
+              alert('Order removed successfully.');
+              location.reload();
+          } else {
+              alert('Error removing order: ' + response.message);
+          }
+      });
+  }
+});
