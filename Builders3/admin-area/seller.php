@@ -51,17 +51,58 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['reject_seller_id'])) 
         $message = "Error rejecting seller: " . mysqli_error($conn);
     }
 }
-
-// Fetch all sellers
-$sellersQuery = mysqli_query($conn, "SELECT * FROM `seller`");
 ?>
 
 <!DOCTYPE html>
 <html>
 <head>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="admin.css">
     <title>Manage Sellers</title>
+    <style>
+        .alert {
+            padding: 10px;
+            background-color: #f44336;
+            color: white;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+        .btn {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin: 4px 2px;
+            cursor: pointer;
+            border-radius: 4px;
+            transition: background-color 0.3s ease;
+        }
+        .btn:hover {
+            background-color: #45a049;
+        }
+        .btn-approve {
+            background-color: #4CAF50;
+        }
+        .btn-reject {
+            background-color: #f44336;
+        }
+        .btn-delete {
+            background-color: #ff9800;
+        }
+        .btn-approve:hover {
+            background-color: #45a049;
+        }
+        .btn-reject:hover {
+            background-color: #e53935;
+        }
+        .btn-delete:hover {
+            background-color: #fb8c00;
+        }
+    </style>
 </head>
 <body>
 
@@ -72,7 +113,7 @@ $sellersQuery = mysqli_query($conn, "SELECT * FROM `seller`");
         <h2>CH Lumber</h2>
     </div>
     <div class="items">
-        <li><i class="fa-solid fa-house"></i></i><a href="admin.php">Dashboard</a></li>
+        <li><i class="fa-solid fa-house"></i><a href="admin.php">Dashboard</a></li>
         <li><i class="fa-solid fa-cart-plus"></i><a href="insert_product.php">Products</a></li>
         <li><i class="fa-solid fa-cart-shopping"></i><a href="product.php">Listed Products</a></li>
         <li><i class="fa-regular fa-user"></i><a href="user.php">Users</a></li>
@@ -91,127 +132,54 @@ $sellersQuery = mysqli_query($conn, "SELECT * FROM `seller`");
         </div>
     <?php endif; ?>
 
-    <table width="100%">
+    <table border="1">
         <thead>
             <tr>
-                <td>Name</td>
-                <td>Status</td>
-                <td>Created At</td>
-                <td>Actions</td>
+                <th>ID</th>
+                <th>First Name</th>
+                <th>Last Name</th>
+                <th>Email</th>
+                <th>Created At</th>
+                <th>Subscription Name</th>
+                <th>Actions</th>
             </tr>
         </thead>
         <tbody>
             <?php
-            while ($seller = mysqli_fetch_assoc($sellersQuery)) {
-                echo "<tr>
-                        <td>{$seller['firstName']} {$seller['lastName']}</td>
-                        <td>{$seller['status']}</td>
-                        <td>{$seller['created_at']}</td>
-                        <td>
-                            <form action='' method='POST' style='display:inline;'>
-                                <input type='hidden' name='seller_id' value='{$seller['id']}'>
-                                <button type='submit' onclick='return confirm(\"Are you sure you want to delete this seller?\");'>Delete</button>
-                            </form>
-                            <form action='' method='POST' style='display:inline;'>
-                                <input type='hidden' name='approve_seller_id' value='{$seller['id']}'>
-                                <button type='submit' onclick='return confirm(\"Are you sure you want to approve this seller?\");'>Approve</button>
-                            </form>
-                            <form action='' method='POST' style='display:inline;'>
-                                <input type='hidden' name='reject_seller_id' value='{$seller['id']}'>
-                                <button type='submit' onclick='return confirm(\"Are you sure you want to reject this seller?\");'>Reject</button>
-                            </form>
-                        </td>
-                    </tr>";
+            $query = "SELECT s.id, s.firstName, s.lastName, s.email, s.created_at, 
+                             COALESCE(sub.name, 'No Subscription') AS subscription_name 
+                      FROM seller s 
+                      LEFT JOIN subscription sub ON s.subscription_id = sub.id";
+            $result = mysqli_query($conn, $query);
+
+            while ($row = mysqli_fetch_assoc($result)) {
+                echo "<tr>";
+                echo "<td>{$row['id']}</td>";
+                echo "<td>{$row['firstName']}</td>";
+                echo "<td>{$row['lastName']}</td>";
+                echo "<td>{$row['email']}</td>";
+                echo "<td>{$row['created_at']}</td>";
+                echo "<td>{$row['subscription_name']}</td>";
+                echo "<td>
+                        <form method='POST' style='display:inline-block;'>
+                            <input type='hidden' name='approve_seller_id' value='{$row['id']}'>
+                            <button type='submit' class='btn btn-approve'>Approve</button>
+                        </form>
+                        <form method='POST' style='display:inline-block;'>
+                            <input type='hidden' name='reject_seller_id' value='{$row['id']}'>
+                            <button type='submit' class='btn btn-reject'>Reject</button>
+                        </form>
+                        <form method='POST' style='display:inline-block;'>
+                            <input type='hidden' name='seller_id' value='{$row['id']}'>
+                            <button type='submit' class='btn btn-delete'>Delete</button>
+                        </form>
+                      </td>";
+                echo "</tr>";
             }
             ?>
         </tbody>
     </table>
 </section>
-
-<style>
-    body {
-        font-family: Arial, sans-serif;
-        background-color: #f9f9f9;
-        color: #333;
-    }
-
-    #menu {
-        background-color: #378370; /* Sidebar color */
-        padding: 20px;
-        color: white;
-    }
-
-    .logo img {
-        width: 50px;
-        height: auto;
-    }
-
-    .items {
-        list-style-type: none;
-        padding: 0;
-    }
-
-    .items li {
-        margin: 10px 0;
-    }
-
-    .items a {
-        color: white;
-        text-decoration: none;
-        font-size: 16px;
-    }
-
-    #interface {
-        padding: 20px;
-    }
-
-    h3 {
-        margin-bottom: 20px;
-    }
-
-    table {
-        width: 100%;
-        border-collapse: collapse;
-        margin-top: 20px;
-    }
-
-    th, td {
-        padding: 12px;
-        text-align: left;
-        border-bottom: 1px solid #ddd;
-    }
-
-    th {
-        background-color: #4CAF50; /* Table header color */
-        color: white;
-    }
-
-    tr:hover {
-        background-color: #f1f1f1;
-    }
-
-    button {
-        background-color: #f44336; /* Delete button color */
-        color: white;
-        border: none;
-        padding: 8px 12px;
-        border-radius: 5px;
-        cursor: pointer;
-    }
-
-    button:hover {
-        background-color: #d32f2f; /* Hover color for delete button */
-    }
-
-    .alert {
-        margin-bottom: 20px;
-        padding: 10px;
-        background-color: #dff0d8;
-        color: #3c763d;
-        border: 1px solid #d6e9c6;
-        border-radius: 5px;
-    }
-</style>
 
 </body>
 </html>

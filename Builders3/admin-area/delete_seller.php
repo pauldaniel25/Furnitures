@@ -19,7 +19,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         header('Location: sellers.php'); // Redirect to the sellers management page
         exit();
     } else {
-        echo "Error deleting seller: " . mysqli_error($conn);
+        echo "<div style='color: #dc3545;'>Error deleting seller: " . mysqli_error($conn) . "</div>";
     }
 } else {
     // Redirect if accessed without POST request
