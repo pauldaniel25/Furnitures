@@ -6,6 +6,7 @@ class User {
     public $First_Name = '';
     public $Last_Name = '';
     public $barangay_id = '';
+    public $contact_number ='';
     public $Email = '';
     public $password = '';
 
@@ -15,24 +16,25 @@ function __construct(){
     $database = new Database();
     $this->db = $database->connect();
     }
-    public function signUp($First_Name, $Last_Name, $barangay_id, $Email, $password) {
+    public function signUp($First_Name, $Last_Name, $barangay_id, $contact_number, $Email, $password) {
         $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
     
         // Use lowercase column names to match the table definition
-        $query = "INSERT INTO user (first_name, last_name, barangay_id, email, password) VALUES (:first_name, :last_name, :barangay_id, :email, :password)";
+        $query = "INSERT INTO user (first_name, last_name, barangay_id , contact_number, email, password) VALUES (:first_name, :last_name, :barangay_id, :contact_number, :email, :password)";
         $stmt = $this->db->prepare($query);
         $stmt->bindParam(':first_name', $First_Name);
         $stmt->bindParam(':last_name', $Last_Name);
         $stmt->bindParam(':barangay_id', $barangay_id);
+        $stmt->bindParam(':contact_number', $contact_number);
         $stmt->bindParam(':email', $Email);
         $stmt->bindParam(':password', $hashedPassword);
-    
+
         if ($stmt->execute()) {
             return "User registered successfully!";
         } else {
             return "Error: User registration failed.";
         }
-    }
+        }
     function getbarangay(){
         $sql = "SELECT id, Brgy_Name FROM Barangay"; 
         $query = $this->db->prepare($sql);
@@ -71,7 +73,7 @@ function __construct(){
 
 }    
 public function getUserData($user_id) {
-    $query = "SELECT First_Name, Last_Name, barangay_id, Email FROM user WHERE id = :user_id";
+    $query = "SELECT First_Name, Last_Name, barangay_id, contact_number FROM user WHERE id = :user_id";
     $stmt = $this->db->prepare($query);
     $stmt->bindParam(':user_id', $user_id);
     $stmt->execute();
@@ -152,9 +154,10 @@ class Product {
             return $count > 0;
         }
         function showproducts($keyword = '', $category_id = ''){
-            $sql = "SELECT p.*, c.category_title AS Category 
+            $sql = "SELECT p.*, c.category_title AS Category, CONCAT(s.firstName, ' ', s.lastName) AS Seller, s.profile_img
                     FROM products p 
                     INNER JOIN categories c ON p.category_id = c.category_id 
+                    INNER JOIN seller s ON p.seller_id = s.id
                     WHERE (p.product_name LIKE :keyword OR p.product_keywords LIKE :keyword) 
                     AND (p.category_id = :category_id OR :category_id = '') 
                     ORDER BY p.product_name ASC;";
@@ -452,12 +455,15 @@ class Order {
         $database = new Database();
         $this->db = $database->connect();
     }
-    public function createOrder($total_price) {
-        $sql = "INSERT INTO user_order (user_id, date, total_cost) VALUES (:user_id, :date, :total_cost)";
+    public function createOrder($total_price, $Address, $Detailed_Address, $Order_notes) {
+        $sql = "INSERT INTO user_order (user_id, date, total_cost, Address, Detailed_Address, Order_notes) VALUES (:user_id, :date, :total_cost, :Address, :Detailed_Address, :Order_notes)";
         $query = $this->db->prepare($sql);
         $query->bindParam(':user_id', $_SESSION['user_id']);
         $query->bindParam(':date', date('Y-m-d'));
         $query->bindParam(':total_cost', $total_price);
+        $query->bindParam(':Address', $Address);
+        $query->bindParam(':Detailed_Address', $Detailed_Address);
+        $query->bindParam(':Order_notes', $Order_notes);
         
     
         if ($query->execute()) {
@@ -565,7 +571,52 @@ class Order {
         
         return $query->fetch(PDO::FETCH_ASSOC);
     }
+
+    public function removeOrder(int $order_id): bool {
+        $sql = "DELETE FROM user_order_details WHERE id = :order_id";
+        $query = $this->db->prepare($sql);
+        $query->bindParam(':order_id', $order_id);
+        return $query->execute();
+    }
       
 }
 
 
+
+class history {
+    public $id;
+    public $product_id;
+    public $user_id;
+    public $date_ordered;
+    public $date_completed;
+    public $status;
+    public $quantity;
+    public $total_cost;
+
+
+    protected $db;
+
+    function __construct(){
+        $database = new Database();
+        $this->db = $database->connect();
+    }
+
+  // Function to get all history orders of a user
+public function getUserOrderHistory($user_id) {
+    $sql = "SELECT 
+                oh.*, 
+                p.product_image1, 
+                p.product_name 
+            FROM 
+                order_history oh
+                INNER JOIN products p ON oh.product_id = p.product_id
+            WHERE 
+                oh.user_id = :user_id 
+            ORDER BY 
+                oh.date_ordered DESC";
+    $query = $this->db->prepare($sql);
+    $query->bindParam(':user_id', $user_id);
+    $query->execute();
+    return $query->fetchAll(PDO::FETCH_ASSOC);
+}
+}

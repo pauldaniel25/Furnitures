@@ -32,7 +32,7 @@ $array = $productobj->showproducts($keyword, $category_id);
             <li><a href="Dashboard.php">Home</a></li>
             <li><a href="product.php">Products</a></li>
             <li><a href="orders.php">Orders</a></li>
-            <li><a href="cart2.php"><i class="fa-solid fa-cart-shopping"></i><sup>1</sup></a></li>
+            <li><a href="cart2.php"><i class="fa-solid fa-cart-shopping"></i><sup></sup></a></li>
             </div>
             <form class="search-form" method="POST" role="search">
                 <input class="search-input" type="search" name="keyword" placeholder="Search">
@@ -41,17 +41,18 @@ $array = $productobj->showproducts($keyword, $category_id);
         </ul>
     </nav>
     <div class="burger-menu">
-        <input type="checkbox" id="burger-checkbox">
-        <label for="burger-checkbox" class="burger-icon">
-            <span></span>
-            <span></span>
-            <span></span>
-        </label>
-        <ul class="burger-links">
-            <li><a href="profile.php">Edit Profile</a></li>
-            <li><a href="#" onclick="confirmLogout()">Logout</a></li>
-        </ul>
-    </div>
+    <input type="checkbox" id="burger-checkbox">
+    <label for="burger-checkbox" class="burger-icon">
+        <span></span>
+        <span></span>
+        <span></span>
+    </label>
+    <ul class="burger-links">
+        <li><a href="profile.php">Edit Profile</a></li>
+        <li><a href="order_history.php">Order History</a></li>
+        <li><a href="#" onclick="confirmLogout()">Logout</a></li>
+    </ul>
+</div>
 </header>
 
 <script>
