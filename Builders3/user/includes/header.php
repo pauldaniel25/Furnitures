@@ -41,17 +41,18 @@ $array = $productobj->showproducts($keyword, $category_id);
         </ul>
     </nav>
     <div class="burger-menu">
-        <input type="checkbox" id="burger-checkbox">
-        <label for="burger-checkbox" class="burger-icon">
-            <span></span>
-            <span></span>
-            <span></span>
-        </label>
-        <ul class="burger-links">
-            <li><a href="profile.php">Edit Profile</a></li>
-            <li><a href="#" onclick="confirmLogout()">Logout</a></li>
-        </ul>
-    </div>
+    <input type="checkbox" id="burger-checkbox">
+    <label for="burger-checkbox" class="burger-icon">
+        <span></span>
+        <span></span>
+        <span></span>
+    </label>
+    <ul class="burger-links">
+        <li><a href="profile.php">Edit Profile</a></li>
+        <li><a href="order_history.php">Order History</a></li>
+        <li><a href="#" onclick="confirmLogout()">Logout</a></li>
+    </ul>
+</div>
 </header>
 
 <script>

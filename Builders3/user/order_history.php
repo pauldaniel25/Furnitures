@@ -1,3 +1,27 @@
+<?php
+// filepath: /C:/xampp/htdocs/git/Furnitures/Builders3/user/order_history.php
+session_start();
+require_once 'classes.php';
+
+// Check if the user is logged in
+if (!isset($_SESSION['user_id'])) {
+    header("Location: login.php"); // Redirect to login page if not logged in
+    exit();
+}
+
+$user_id = $_SESSION['user_id'];
+
+// Create an instance of the history class
+$history = new history();
+$orderHistory = $history->getUserOrderHistory($user_id);
+
+// Check if any orders exist
+if (empty($orderHistory)) {
+    $noOrdersMessage = "You have no order history.";
+} else {
+    $noOrdersMessage = "";
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -91,15 +115,15 @@
     <div class="container order-history-container">
         <h1 class="text-center mb-4">Order History</h1>
         <div class="filter-section">
-            <input type="text" placeholder="Search orders...">
-            <select>
+            <input type="text" id="searchInput" placeholder="Search orders...">
+            <select id="statusFilter">
                 <option value="all">All</option>
-                <option value="complete">Complete</option>
-                <option value="canceled">Canceled</option>
+                <option value="Completed">Completed</option>
+                <option value="Canceled">Canceled</option>
             </select>
-            <button>Filter</button>
+            <button onclick="filterOrders()">Filter</button>
         </div>
-        <table class="order-history-table">
+        <table class="order-history-table" id="orderHistoryTable">
             <thead>
                 <tr>
                     <th>Image</th>
@@ -111,32 +135,50 @@
                 </tr>
             </thead>
             <tbody>
-                <tr>
-                    <td colspan="6"><h2>Today</h2></td>
-                </tr>
-                <tr>
-                    <td><img src="https://via.placeholder.com/50" alt="Wooden Chair" class="img-fluid"></td>
-                    <td>Wooden Chair</td>
-                    <td>2023-10-01</td>
-                    <td>2023-10-03</td>
-                    <td>2</td>
-                    <td class="status-complete">Complete</td>
-                </tr>
-                <!-- Additional rows can be added here -->
-                <tr>
-                    <td colspan="6"><h2>Last Week</h2></td>
-                </tr>
-                <tr>
-                    <td><img src="https://via.placeholder.com/50" alt="Wooden Chair" class="img-fluid"></td>
-                    <td>Wooden Chair</td>
-                    <td>2023-09-24</td>
-                    <td>2023-09-26</td>
-                    <td>1</td>
-                    <td class="status-complete">Complete</td>
-                </tr>
-                <!-- Additional rows can be added here -->
+                <?php if ($noOrdersMessage): ?>
+                    <tr>
+                        <td colspan="6" class="text-center"><?php echo $noOrdersMessage; ?></td>
+                    </tr>
+                <?php else: ?>
+                    <?php foreach ($orderHistory as $order): ?>
+                        <tr>
+                            <td><img src="../seller/product_images2/<?php echo $order['product_image1']; ?>" alt="<?php echo $order['product_name']; ?>" class="img-fluid"></td>
+                            <td><?php echo $order['product_name']; ?></td>
+                            <td><?php echo $order['date_ordered']; ?></td>
+                            <td><?php echo $order['date_completed']; ?></td>
+                            <td><?php echo $order['quantity']; ?></td>
+                            <td class="<?php echo $order['status'] === 'Completed' ? 'status-complete' : 'status-canceled'; ?>"><?php echo $order['status']; ?></td>
+                        </tr>
+                    <?php endforeach; ?>
+                <?php endif; ?>
             </tbody>
         </table>
     </div>
+    <script>
+        function filterOrders() {
+            const searchInput = document.getElementById('searchInput').value.toLowerCase();
+            const statusFilter = document.getElementById('statusFilter').value;
+            const table = document.getElementById('orderHistoryTable');
+            const rows = table.getElementsByTagName('tr');
+
+            for (let i = 1; i < rows.length; i++) {
+                const cells = rows[i].getElementsByTagName('td');
+                const productName = cells[1].textContent.toLowerCase();
+                const status = cells[5].textContent;
+
+                let matchesSearch = productName.includes(searchInput);
+                let matchesStatus = (statusFilter === 'all') || (status === statusFilter);
+
+                if (matchesSearch && matchesStatus) {
+                    rows[i].style.display = '';
+                } else {
+                    rows[i].style.display = 'none';
+                }
+            }
+        }
+
+        document.getElementById('searchInput').addEventListener('input', filterOrders);
+        document.getElementById('statusFilter').addEventListener('change', filterOrders);
+    </script>
 </body>
 </html>

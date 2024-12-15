@@ -22,7 +22,7 @@ foreach ($cart_items as $item) {
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Create order
     $order = new Order();
-    $order_id = $order->createOrder($total_price);
+    $order_id = $order->createOrder($total_price, $_POST['address'], $_POST['address-details'], $_POST['order-notes']);
 
     // Add order items
     foreach ($cart_items as $item) {
@@ -32,8 +32,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Clear cart
     $cart->clearCart($user_id);
 
-      // Insert into order_status_history
-      $order->updateOrderStatus($order_id, 'pending');
+    // Insert into order_status_history
+    $order->updateOrderStatus($order_id, 'pending');
 
     header('Location: cart2.php?success=true');
     exit;
@@ -58,80 +58,82 @@ $user_data = $user->getUserData($_SESSION['user_id']);
 <body>
     <?php require_once 'includes/header.php'; ?>
 
-  
     <div class="container mt-5">
-  <div class="row">
-    <div class="col-md-4">
-      <div class="order-summary card mb-4">
-        <h5 class="card-header">Order Summary</h5>
-        <div class="card-body">
-          <div class="product-list" style="max-height: 300px; overflow-y: auto;">
-            <?php foreach ($cart_items as $item) : ?>
-              <div class="list-group-item d-flex justify-content-between align-items-center">
-                <span><?= $item['product_name'] ?> x <?= $item['quantity'] ?></span>
-                <span>$<?= number_format($item['product_price'] * $item['quantity'], 2) ?></span>
-              </div>
-            <?php endforeach; ?>
-            <div class="list-group-item d-flex justify-content-between align-items-center">
-              <strong>Subtotal:</strong>
-              <span>$<?= number_format($total_price, 2) ?></span>
+        <div class="row">
+            <div class="col-md-4">
+                <div class="order-summary card mb-4">
+                    <h5 class="card-header">Order Summary</h5>
+                    <div class="card-body">
+                        <div class="product-list" style="max-height: 300px; overflow-y: auto;">
+                            <?php foreach ($cart_items as $item) : ?>
+                                <div class="list-group-item d-flex justify-content-between align-items-center">
+                                    <span><?= $item['product_name'] ?> x <?= $item['quantity'] ?></span>
+                                    <span>$<?= number_format($item['product_price'] * $item['quantity'], 2) ?></span>
+                                </div>
+                            <?php endforeach; ?>
+                            <div class="list-group-item d-flex justify-content-between align-items-center">
+                                <strong>Subtotal:</strong>
+                                <span>$<?= number_format($total_price, 2) ?></span>
+                            </div>
+                            <div class="list-group-item d-flex justify-content-between align-items-center">
+                                <strong>Total:</strong>
+                                <span>$<?= number_format($total_price, 2) ?></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div class="list-group-item d-flex justify-content-between align-items-center">
-              <strong>Total:</strong>
-              <span>$<?= number_format($total_price, 2) ?></span>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
 
-   <div class="col-md-8">
-    <div class="checkout-form card mb-4">
-        <h5 class="card-header">Checkout Information</h5>
-        <div class="card-body">
-            <form method="post" id="checkout-form">
-                
-            <div class="mb-3">
-    <label for="name">Full Name:</label>
-    <input type="text" id="name" name="name" class="form-control" value="<?= $user_data['First_Name'] . ' ' . $user_data['Last_Name'] ?>" required>
-</div>
-<div class="mb-3">
-    <label for="email">Email:</label>
-    <input type="email" id="email" name="email" class="form-control" value="<?= $user_data['Email'] ?>" required>
-</div>
-<div class="mb-3">
-    <label for="address">Address:</label>
-    <select id="address" name="address" class="form-control" required>
-        <?php
-        $barangays = $user->getbarangay();
-        foreach ($barangays as $barangay) {
-            $selected = ($barangay['id'] == $user_data['barangay_id']) ? 'selected' : '';
-            echo "<option value='{$barangay['id']}' $selected>{$barangay['Brgy_Name']}</option>";
-        }
-        ?>
-    </select>
-</div>
-                <div class="mb-3">
-                    <label for="address-details">Detailed Address (Optional):</label>
-                    <input id="address-details" name="address-details" class="form-control"></input>
+            <div class="col-md-8">
+                <div class="checkout-form card mb-4">
+                    <h5 class="card-header">Checkout Information</h5>
+                    <div class="card-body">
+                        <form method="post" id="checkout-form">
+                            <div class="mb-3">
+                                <label for="name">Full Name:</label>
+                                <input type="text" id="name" name="name" class="form-control" value="<?= $user_data['First_Name'] . ' ' . $user_data['Last_Name'] ?>" placeholder="Enter your full name" required>
+                            </div>
+                            <div class="mb-3">
+                              
+                            </div>  
+                            <label for="contact_number">Contact:</label>
+                                  <input type="tel" id="contact_number" name="contact_number" class="form-control" value="<?= $user_data['contact_number'] ?>" placeholder="Enter your contact number" required>
+                              <div class="mb-3">
+                                <label for="address">Address:</label>
+                                <select id="address" name="address" class="form-control" required>
+                                    <?php
+                                    $barangays = $user->getbarangay();
+                                    foreach ($barangays as $barangay) {
+                                        $selected = ($barangay['id'] == $user_data['barangay_id']) ? 'selected' : '';
+                                        echo "<option value='{$barangay['id']}' $selected>{$barangay['Brgy_Name']}</option>";
+                                    }
+                                    ?>
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label for="address-details">Detailed Address (Optional):</label>
+                                <input id="address-details" name="address-details" class="form-control" placeholder="Enter detailed address"></input>
+                            </div>
+                            <div class="mb-3">
+                                <label for="order-notes">Order Notes (Optional):</label>
+                                <textarea id="order-notes" name="order-notes" class="form-control" placeholder="Enter any order notes"></textarea>
+                            </div>
+                        </form>
+                    </div>
                 </div>
-                <div class="mb-3">
-                    <label for="order-notes">Order Notes (Optional):</label>
-                    <textarea id="order-notes" name="order-notes" class="form-control"></textarea>
+            </div>
+            <div class="payment-method card mb-4">
+                <h5 class="card-header">Payment Method</h5>
+                <div class="card-body">
+                    <p>Cash on Delivery (COD)</p>
+                    <p>Please pay upon delivery.</p>
                 </div>
-            </form>
+            </div>
+            <div class="actions">
+                <button class="btn btn-secondary me-2" onclick="location.href='cart2.php'">Back to Cart</button>
+                <button form="checkout-form" type="submit" class="btn btn-primary">Confirm Order</button>
+            </div>
         </div>
     </div>
-</div>
-    <div class="payment-method card mb-4">
-        <h5 class="card-header">Payment Method</h5>
-        <div class="card-body">
-            <p>Cash on Delivery (COD)</p>
-            <p>Please pay upon delivery.</p>
-        </div>
-    </div>
-    <div class="actions">
-        <button class="btn btn-secondary me-2" onclick="location.href='cart2.php'">Back to Cart</button>
-        <button form="checkout-form" type="submit" class="btn btn-primary">Confirm Order</button>
-    </div>
-</div>
+</body>
+</html>
