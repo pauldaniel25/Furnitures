@@ -4,7 +4,7 @@ require_once 'classes.php';
 
 session_start();
 
-$First_Name = $Last_Name = $barangay_id = $email = $password = '';
+$First_Name = $Last_Name = $barangay_id = $email = $password = $contact_number = '';
 $userobj = new User();
 $signupErr = '';
 
@@ -12,11 +12,12 @@ if($_SERVER['REQUEST_METHOD'] == 'POST'){
     $First_Name = clean($_POST['First_Name']);
     $Last_Name = clean($_POST['Last_Name']);
     $barangay_id = clean($_POST['barangay_id']);
+    $contact_number = clean($_POST['contact_number']);
     $email = clean($_POST['email']);
     $password = clean($_POST['password']);
 
     // Here you would typically validate and save the user data
-    if ($userobj->signUp($First_Name, $Last_Name, $barangay_id, $email, $password)) {
+    if ($userobj->signUp($First_Name, $Last_Name, $barangay_id, $contact_number, $email, $password )) {
         $_SESSION['success_message'] = "Account created successfully! You can now log in.";
         header("Location: index.php");
         exit();
@@ -63,6 +64,10 @@ if($_SERVER['REQUEST_METHOD'] == 'POST'){
                 <div class="mb-3">
                     <label for="email" class="form-label">Email</label>
                     <input type="email" name="email" id="email" class="form-control" placeholder="Enter your email" required>
+                </div>
+                <div class="mb-3">
+                    <label for="contact_number" class="form-label">Contact Number</label>
+                    <input type="text" name="contact_number" id="contact_number" class="form-control" placeholder="Enter your contact number" required>
                 </div>
                 <div class="mb-3">
     <label for="barangay_id" class="form-label">Barangay</label>

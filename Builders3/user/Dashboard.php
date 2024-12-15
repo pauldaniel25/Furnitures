@@ -29,9 +29,12 @@ if (isset($_SESSION['success'])) {
 <body>
     
 <!-- header here -->
-<?php
+ <div class="header">
+ <?php
 require_once 'includes/header.php';
 ?>
+ </div>
+
 <!-- modal here -->
 <div class="modal-container"></div>
 
@@ -56,7 +59,12 @@ require_once 'includes/header.php';
                         <p class="card-text"><?= htmlspecialchars($productobj->truncateDescription($arr['product_description'], 30)) ?></p>
                         <p class="card-text"><strong>Price:</strong> $<?= $arr['product_price'] ?></p>
                         <p class="card-text"><strong>Category:</strong> <?= $arr['Category'] ?></p>
-                        <p class="card-text"><strong>Status:</strong> <?= htmlspecialchars($arr['status']) ?></p>
+                        <p class="card-text">
+                                <strong>Status:</strong> 
+                                <span class="<?= ($arr['quantity'] == 0) ? 'text-danger' : 'text-success' ?>">
+                                    <?= ($arr['quantity'] == 0) ? 'Unavailable' : 'Available' ?>
+                                </span>
+                            </p>
                         <button type="button" class="btn add-cart-btn btn-custom" data-id="<?= $arr['product_id'] ?>" id="add-to-cart" >Add to Cart</button>
                         <a href="view.php?id=<?= $arr['product_id']?>" class="btn btn-custom">View Product</a>
                     </div>
