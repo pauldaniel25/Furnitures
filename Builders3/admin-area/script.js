@@ -46,13 +46,6 @@ var barChartOptions = {
   var barChart = new ApexCharts(document.querySelector("#bar-chart"),barChartOptions);
   barChart.render();
 
-
-
-
-
-
-
-
   var areaChartsOption = {
     series: [{
     name: 'Orders',
@@ -104,3 +97,8 @@ var barChartOptions = {
 
   var areaChart = new ApexCharts(document.querySelector("#area-chart"), areaChartsOption);
   areaChart.render();
+
+document.getElementById('menu-btn').addEventListener('click', function() {
+    document.getElementById('menu').classList.toggle('collapsed');
+    document.getElementById('interface').classList.toggle('expanded');
+});

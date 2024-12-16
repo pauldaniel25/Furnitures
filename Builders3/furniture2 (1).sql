@@ -160,7 +160,8 @@ CREATE TABLE `subscription` (
   `id` int(11) NOT NULL,
   `name` varchar(255) NOT NULL,
   `start_date` date NOT NULL,
-  `end_date` date NOT NULL
+  `end_date` date NOT NULL,
+  `subscription_price` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
