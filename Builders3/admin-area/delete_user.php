@@ -19,7 +19,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         header('Location: users.php'); // Redirect to the users management page
         exit();
     } else {
-        echo "Error deleting user: " . mysqli_error($conn);
+        echo "<div style='color: #dc3545;'>Error deleting user: " . mysqli_error($conn) . "</div>";
     }
 } else {
     // Redirect if accessed without POST request
