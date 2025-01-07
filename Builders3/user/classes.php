@@ -79,6 +79,31 @@ public function getUserData($user_id) {
     $stmt->execute();
     return $stmt->fetch(PDO::FETCH_ASSOC);
 }
+public function getUserById($user_id) {
+    $sql = "SELECT u.*, b.Brgy_name, CONCAT(u.first_name, ' ', u.last_name) AS name FROM user u 
+    INNER JOIN barangay b ON u.barangay_id = b.id  
+    WHERE u.id = :user_id";
+    $query = $this->db->prepare($sql);
+    $query->bindParam(':user_id', $user_id);
+    $query->execute();
+    return $query->fetch(PDO::FETCH_ASSOC);
+}
+
+public function updateUser($user_id, $name, $email, $password) {
+    if ($password) {
+        $password_hash = password_hash($password, PASSWORD_BCRYPT);
+        $sql = "UPDATE user SET name = :name, email = :email, password = :password WHERE id = :user_id";
+        $query = $this->db->prepare($sql);
+        $query->bindParam(':password', $password_hash);
+    } else {
+        $sql = "UPDATE users SET name = :name, email = :email WHERE id = :user_id";
+        $query = $this->db->prepare($sql);
+    }
+    $query->bindParam(':name', $name);
+    $query->bindParam(':email', $email);
+    $query->bindParam(':user_id', $user_id);
+    return $query->execute();
+}
 }
 class Product {
     public $id = '';
@@ -503,7 +528,7 @@ class Order {
                 INNER JOIN user_order_details uod ON uo.id = uod.user_order_id
                 INNER JOIN products p ON uod.product_id = p.product_id
               WHERE 
-                uo.user_id = :user_id
+                uo.user_id = :user_id AND uod.is_active = TRUE
               ORDER BY 
                 uo.date DESC";
         
@@ -573,7 +598,7 @@ class Order {
     }
 
     public function removeOrder(int $order_id): bool {
-        $sql = "DELETE FROM user_order_details WHERE id = :order_id";
+        $sql = "UPDATE user_order_details SET is_active = FALSE WHERE id = :order_id";
         $query = $this->db->prepare($sql);
         $query->bindParam(':order_id', $order_id);
         return $query->execute();
