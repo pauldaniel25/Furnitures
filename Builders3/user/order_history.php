@@ -33,6 +33,7 @@ if (empty($orderHistory)) {
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" />
     <link rel="stylesheet" href="productstyle.css">
     <link rel="stylesheet" href="includes/header.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
     <style>
         body {
             font-family: 'Arial', sans-serif;
@@ -75,16 +76,17 @@ if (empty($orderHistory)) {
             justify-content: space-between;
             align-items: center;
             margin-bottom: 20px;
+            padding: 10px; /* Added padding */
         }
         .filter-section input[type="text"] {
             flex: 1;
-            padding: 10px;
+            padding: 5px; /* Shortened space bar */
             margin-right: 10px;
             border: 1px solid #ccc;
             border-radius: 5px;
         }
         .filter-section select, .filter-section button {
-            padding: 10px;
+            padding: 5px; /* Shortened space bar */
             border: 1px solid #ccc;
             border-radius: 5px;
             margin-right: 10px;
@@ -106,6 +108,36 @@ if (empty($orderHistory)) {
             border-bottom: 1px solid #ddd;
             padding-bottom: 5px;
         }
+        .calendar-icon {
+            cursor: pointer;
+            font-size: 1.5rem;
+            margin-left: 10px;
+            margin-right: 1em;
+        }
+        .date-filter-modal {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: white;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+        }
+        .date-filter-modal .close-btn {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        .date-filter-modal .close-btn:hover {
+            background-color: #0056b3;
+        }
     </style>
 </head>
 <body>
@@ -116,12 +148,18 @@ if (empty($orderHistory)) {
         <h1 class="text-center mb-4">Order History</h1>
         <div class="filter-section">
             <input type="text" id="searchInput" placeholder="Search orders...">
+            <i class="bi bi-calendar calendar-icon" onclick="toggleDateFilterModal()"></i>
             <select id="statusFilter">
                 <option value="all">All</option>
                 <option value="Completed">Completed</option>
                 <option value="Canceled">Canceled</option>
             </select>
             <button onclick="filterOrders()">Filter</button>
+        </div>
+        <div class="date-filter-modal" id="dateFilterModal">
+            <input type="text" id="dateRange" class="form-control mb-2" placeholder="Select date range">
+            <button onclick="applyDateFilter()" class="btn btn-primary">Apply</button>
+            <button onclick="toggleDateFilterModal()" class="close-btn">Close</button>
         </div>
         <table class="order-history-table" id="orderHistoryTable">
             <thead>
@@ -154,7 +192,31 @@ if (empty($orderHistory)) {
             </tbody>
         </table>
     </div>
+    <script src="https://cdn.jsdelivr.net/jquery/latest/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
     <script>
+        $(function() {
+            $('#dateRange').daterangepicker({
+                singleDatePicker: false,
+                showDropdowns: true,
+                autoUpdateInput: false,
+                locale: {
+                    cancelLabel: 'Clear'
+                }
+            });
+
+            $('#dateRange').on('apply.daterangepicker', function(ev, picker) {
+                $(this).val(picker.startDate.format('MM/DD/YYYY') + ' - ' + picker.endDate.format('MM/DD/YYYY'));
+                applyDateFilter(picker.startDate, picker.endDate);
+            });
+
+            $('#dateRange').on('cancel.daterangepicker', function(ev, picker) {
+                $(this).val('');
+                applyDateFilter(null, null);
+            });
+        });
+
         function filterOrders() {
             const searchInput = document.getElementById('searchInput').value.toLowerCase();
             const statusFilter = document.getElementById('statusFilter').value;
@@ -170,6 +232,33 @@ if (empty($orderHistory)) {
                 let matchesStatus = (statusFilter === 'all') || (status === statusFilter);
 
                 if (matchesSearch && matchesStatus) {
+                    rows[i].style.display = '';
+                } else {
+                    rows[i].style.display = 'none';
+                }
+            }
+        }
+
+        function toggleDateFilterModal() {
+            const dateFilterModal = document.getElementById('dateFilterModal');
+            dateFilterModal.style.display = dateFilterModal.style.display === 'none' ? 'block' : 'none';
+        }
+
+        function applyDateFilter(start, end) {
+            const table = document.getElementById('orderHistoryTable');
+            const rows = table.getElementsByTagName('tr');
+
+            for (let i = 1; i < rows.length; i++) {
+                const cells = rows[i].getElementsByTagName('td');
+                const dateOrdered = moment(cells[2].textContent, 'YYYY-MM-DD');
+                const dateCompleted = moment(cells[3].textContent, 'YYYY-MM-DD');
+
+                let matchesDateRange = true;
+                if (start && end) {
+                    matchesDateRange = dateOrdered.isBetween(start, end, null, '[]') || dateCompleted.isBetween(start, end, null, '[]');
+                }
+
+                if (matchesDateRange) {
                     rows[i].style.display = '';
                 } else {
                     rows[i].style.display = 'none';

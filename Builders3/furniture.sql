@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Dec 15, 2024 at 05:15 PM
+-- Generation Time: Jan 07, 2025 at 06:36 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -46,7 +46,8 @@ INSERT INTO `admin` (`id`, `firstName`, `lastName`, `email`, `password`, `create
 (3, 'john', 'rems', 'firee@gmail.com', 32135, '2024-11-20 10:23:07'),
 (4, 'john', 'rems', 'rems@gmail.com', 25, '2024-11-20 10:27:37'),
 (5, 'jamir', 'basa', 'jamirbasa@gmail.com', 25, '2024-11-26 21:52:18'),
-(6, 'paul daniel', 'ojales', '1@gmail.com', 0, '2024-12-01 11:35:23');
+(6, 'paul daniel', 'ojales', '1@gmail.com', 0, '2024-12-01 11:35:23'),
+(7, 'Pol', 'Dan', 'pauldanielojales@yahoo.com', 0, '2024-12-17 02:35:52');
 
 -- --------------------------------------------------------
 
@@ -241,7 +242,36 @@ CREATE TABLE `order_history` (
 --
 
 INSERT INTO `order_history` (`id`, `product_id`, `user_id`, `date_ordered`, `date_completed`, `status`, `quantity`, `total_cost`) VALUES
-(1, 25, 35, '2024-12-17', '2024-12-23', 'Canceled', 2, 9180.00);
+(1, 25, 35, '2024-12-17', '2024-12-23', 'Canceled', 2, 9180.00),
+(2, 21, 35, '2024-12-15', '2024-12-16', 'Canceled', 5, 2000.00),
+(3, 23, 41, '2024-12-15', '2024-12-16', 'Canceled', 1, 2999.00),
+(4, 26, 41, '2024-12-15', '2024-12-16', 'Canceled', 5, 1495.00),
+(5, 19, 35, '2024-12-15', '2024-12-16', 'Completed', 1, 500.00),
+(6, 21, 35, '2024-12-15', '2024-12-17', 'Canceled', 1, 400.00),
+(7, 24, 35, '2024-12-15', '2024-12-18', 'Canceled', 1, 1799.00),
+(8, 24, 35, '2024-12-15', '2024-12-18', 'Canceled', 1, 1799.00),
+(9, 22, 35, '2024-12-18', '2024-12-18', 'Canceled', 1, 8999.00),
+(10, 22, 35, '2024-12-18', '2024-12-18', 'Canceled', 1, 8999.00),
+(11, 25, 35, '2025-01-06', '2025-01-06', 'Canceled', 2, 27178.00),
+(12, 25, 35, '2025-01-06', '2025-01-06', 'Canceled', 2, 27178.00),
+(13, 22, 35, '2025-01-06', '2025-01-06', 'Canceled', 2, 27178.00),
+(14, 22, 35, '2025-01-06', '2025-01-06', 'Canceled', 2, 27178.00),
+(15, 22, 48, '2025-01-06', '2025-01-07', 'Canceled', 1, 14997.00),
+(16, 22, 48, '2025-01-06', '2025-01-07', 'Canceled', 1, 14997.00),
+(17, 23, 48, '2025-01-06', '2025-01-07', 'Canceled', 2, 14997.00),
+(18, 23, 48, '2025-01-06', '2025-01-07', 'Canceled', 2, 14997.00),
+(19, 25, 48, '2025-01-06', '2025-01-07', 'Canceled', 1, 4590.00),
+(20, 25, 48, '2025-01-06', '2025-01-07', 'Canceled', 1, 4590.00),
+(21, 19, 48, '2025-01-06', '2025-01-07', 'Canceled', 1, 500.00),
+(22, 19, 48, '2025-01-06', '2025-01-07', 'Canceled', 1, 500.00),
+(23, 21, 48, '2025-01-06', '2025-01-07', 'Canceled', 4, 1600.00),
+(24, 21, 48, '2025-01-06', '2025-01-07', 'Canceled', 4, 1600.00),
+(25, 21, 48, '2025-01-06', '2025-01-07', 'Canceled', 4, 1600.00),
+(26, 20, 48, '2025-01-06', '2025-01-07', 'Canceled', 4, 8000.00),
+(27, 22, 49, '2025-01-06', '2025-01-07', 'Canceled', 1, 31949.00),
+(28, 23, 50, '2025-01-06', '2025-01-07', 'Canceled', 1, 20997.00),
+(29, 23, 52, '2025-01-06', '2025-01-07', 'Canceled', 3, 44993.00),
+(30, 22, 52, '2025-01-06', '2025-01-07', 'Completed', 4, 44993.00);
 
 -- --------------------------------------------------------
 
@@ -273,7 +303,7 @@ INSERT INTO `products` (`product_id`, `product_name`, `product_description`, `pr
 (14, 'RE:zero merchandise', 'Keychains, bedsheets, and many more merchandise that a negga would love! purchase the product now and experience a life similar to another fucking world!!!! aefgghhhhhh', 're:zero', 1, '699770.png', '1323312.jpeg', 're-zero-natsuki-subaru-uhd-4k-wallpaper.jpg', '900', '2024-12-08 14:43:14', 'true', 19, 0),
 (17, 'Elegant Table ', 'Basic table set that comes in different type of wood and sizes. durable, secure, and good decoration for homes', 'table24', 1, 'table1.jpg', 'b-45_1024x1024@2x.webp', 'Toya-Icons-Sophia-4-seater-600x600.jpg', '2000', '2024-11-12 13:43:51', 'true', 4, 0),
 (18, 'Sample Product', 'Illuminate your workspace with the Smart LED Desk Lamp that combines sleek design with advanced technology. This energy-efficient desk lamp features adjustable brightness levels and a range of color temperatures, making it perfect for any task', 'Sample', 2, 'ea01ac68-f95d-44c0-bafe-b0ab0071b4fa.webp', 'images.jfif', 'high_quality_re_zero_4k_wallpaper_by_sdugoten_dfvyffu-414w-2x.jpg', '499', '2024-11-12 17:59:11', 'true', 4, 0),
-(19, 'painting', 'it is a painting of a painter', 'pp', 1, 'thumb-1920-1323803.jpeg', 'bg.png', 'high_quality_re_zero_4k_wallpaper_by_sdugoten_dfvyffu-414w-2x.jpg', '500', '2024-11-30 12:37:49', 'true', 17, 0),
+(19, 'painting', 'it is a painting of a painter', 'pp', 2, 'thumb-1920-1323803.jpeg', 'bg.png', 'high_quality_re_zero_4k_wallpaper_by_sdugoten_dfvyffu-414w-2x.jpg', '500', '2024-12-15 17:58:32', 'true', 17, 2),
 (20, 'Frame', 'it is a very very frame', 'frame', 3, '418242049_7166968090050657_3787948158708799180_n.jpg', '387512755_1407599433156736_1528413741543136407_n.jpg', '418626179_2082648605423733_1408003536253476387_n.jpg', '2000', '2024-12-01 21:24:10', 'true', 18, 10),
 (21, 'Sample 3', 'nice chair upuan mo ako please', 'chaorss', 2, 'anime-re-zero-starting-life-in-another-world-subaru-natsuki-wallpaper-thumb .jpg', 'Login rezero.jpg', 'Diez Green Wool Sofa + Reviews _ CB2.jpg', '400', '2024-12-01 21:37:42', 'true', 18, 600),
 (22, 'Blue Sofa', 'This beautiful blue sofa is the perfect blend of style, comfort, and durability, designed to elevate any living space. The rich, deep blue fabric adds a touch of sophistication while remaining versatile enough to complement a wide range of decor styles, from modern to traditional. The soft upholstery feels inviting to the touch, making it ideal for long hours of lounging or entertaining guests.', 'bluesofa', 2, 'depositphotos_377527168-stock-photo-interior-design-modern-living-room.jpg', 'furniture-styles-GettyImages-1467984982-512fed4077b646eabbc187619554d517.jpg', 'images.jpg', '8999', '2024-12-08 13:25:13', 'true', 19, 55),
@@ -305,7 +335,12 @@ INSERT INTO `ratings` (`rating_id`, `product_id`, `user_id`, `rating`, `review`,
 (6, 14, 35, 5.00, 'best merchandize i can get in this store. perfectly crafted down to very last edges', '2024-12-01 20:48:15'),
 (7, 21, 35, 5.00, 'Very Nicest Product', '2024-12-08 13:59:56'),
 (8, 23, 35, 4.00, 'I&#39;m thoroughly satisfied with my round white table purchase! The sleek, modern design perfectly complements my interior, and the sturdy build ensures durability. Assembly was surprisingly hassle-free. Whether for dining, working or entertaining, this versatile table fits perfectly in any setting. Overall, excellent quality and value!', '2024-12-10 06:45:47'),
-(9, 23, 41, 1.00, 'I&#39;m disappointed with my round white table purchase. The design looks cheaper than expected, and the material feels flimsy. Assembly was frustrating due to unclear instructions. Unfortunately, the table wobbles and doesn&#39;t feel stable. For the price, I expected better quality and craftsmanship.', '2024-12-10 06:46:59');
+(9, 23, 41, 1.00, 'I&#39;m disappointed with my round white table purchase. The design looks cheaper than expected, and the material feels flimsy. Assembly was frustrating due to unclear instructions. Unfortunately, the table wobbles and doesn&#39;t feel stable. For the price, I expected better quality and craftsmanship.', '2024-12-10 06:46:59'),
+(10, 22, 49, 5.00, 'nice product', '2025-01-06 17:26:35'),
+(11, 22, 35, 1.00, 'bad product', '2025-01-06 17:27:21'),
+(12, 22, 52, 5.00, 'liked the profduct', '2025-01-06 17:51:11'),
+(13, 22, 39, 3.00, 'mid pfrod', '2025-01-06 17:51:48'),
+(14, 23, 52, 5.00, 'good', '2025-01-06 17:52:36');
 
 -- --------------------------------------------------------
 
@@ -383,15 +418,20 @@ CREATE TABLE `user` (
 --
 
 INSERT INTO `user` (`id`, `first_name`, `last_name`, `barangay_id`, `contact_number`, `email`, `password`, `created_at`) VALUES
-(34, 'John Harold', 'Remigio', 30330, '', 'hotboyspicylava@gmail.com', '$2y$10$XvlXzfU4DQ.Y6f0m3bJO2uz94DIXeT..vs1WqHmluc9VP.qDax6IW', '2024-10-22 13:04:27'),
-(35, 'Paul Daniel', 'Ojales', 30390, '', 'pauldanielojales@gmail.com', '$2y$10$EBH4F3Ppw9vwMjeM5fhvqebUmUQvmd3.ulL5ImGqk.1uzuXDobDDi', '2024-11-12 11:35:04'),
+(34, 'John Harold', 'Remigio', 30330, '09216969957', 'hotboyspicylava@gmail.com', '$2y$10$XvlXzfU4DQ.Y6f0m3bJO2uz94DIXeT..vs1WqHmluc9VP.qDax6IW', '2024-12-15 18:05:46'),
+(35, 'Paul Daniel', 'Ojales', 30390, '093477754', 'pauldanielojales@gmail.com', '$2y$10$EBH4F3Ppw9vwMjeM5fhvqebUmUQvmd3.ulL5ImGqk.1uzuXDobDDi', '2024-12-15 18:05:59'),
 (36, 'dsvdsv', 'freddy', 30339, '', 'EMT@gmail.com', '$2y$10$qvNQ0nT.NpZQYu0x6PVFeuHwWTVExh3zGWOO2TWskFqdAAol.3hvC', '2024-11-13 05:25:46'),
 (37, 'John Harold', 'Remigio', 30330, '', 'sample@gmail.com', '$2y$10$.52/LBFhZOKyhaLD56vEL.APt1uzJB82EzgLV1F/6ToH.Bor/tYQK', '2024-11-21 14:53:12'),
 (38, 'test', 'ting', 30340, '', 'test@gmail.com', '$2y$10$llyjWnLMNpzvTNLHYCfstehPGqN7e0L/zowQDYQkEoqHeo4wzaQdW', '2024-11-28 13:40:56'),
 (39, 'John Harold', 'Remigio', 30330, '', '1@gmail.com', '$2y$10$v2M2XVnvVRWWQZWkflybWOGsHepHLqKneLVU8v/yUk.3hi7JhtmTK', '2024-11-30 12:27:05'),
-(41, 'John Harold', 'Remigio', 30330, '', 'johnharoldremigio@user.com', '$2y$10$X63xQx.5BHP36u0E1vUtwOAlAXxl4onj3c/J.Lgt/UuFqZTeR2V2G', '2024-12-08 10:50:08'),
-(42, 'John Harold', 'Remigio', 30327, '', '11@gmail.com', '$2y$10$fAscRjzEtB8Y8wGXWHEUrOMFKVRnU17TuQ.XUKSXzLP31Y.916W9i', '2024-12-08 11:04:56'),
-(47, 'are', 'no', 30340, '09175447598', 'bunny@gmail.com', '$2y$10$EL5UV.wMeJaIJTPvKrJhbui1aCo5QiCInnYfPziIAsYgGSfl2n5Fq', '2024-12-15 16:14:32');
+(41, 'John Harold', 'Remigio', 30330, '09547782509', 'johnharoldremigio@user.com', '$2y$10$X63xQx.5BHP36u0E1vUtwOAlAXxl4onj3c/J.Lgt/UuFqZTeR2V2G', '2024-12-15 18:06:30'),
+(42, 'John Harold', 'Remigio', 30327, '09155424423', '11@gmail.com', '$2y$10$fAscRjzEtB8Y8wGXWHEUrOMFKVRnU17TuQ.XUKSXzLP31Y.916W9i', '2024-12-15 18:05:32'),
+(47, 'are', 'no', 30340, '09175447598', 'bunny@gmail.com', '$2y$10$EL5UV.wMeJaIJTPvKrJhbui1aCo5QiCInnYfPziIAsYgGSfl2n5Fq', '2024-12-15 16:14:32'),
+(48, 'john', 'freddy', 30330, '09175447598', 'john@gmail.com', '$2y$10$z41m953WIzLK6k9Keqlsd.Qa..Xj9Y95g4wiCBj1aR0KZsDfl.JH6', '2025-01-06 16:06:04'),
+(49, 'john', 'freddy', 30331, '09175447598', 'john1@gmail.com', '$2y$10$aKBHMp5TQvZLH28bgHEjOu9CkStbaZwNbSmDWwLzGX9iwBp6lG3oC', '2025-01-06 17:20:42'),
+(50, 'red', 'blue', 30328, '09175447598', '99@gmail.com', '$2y$10$pb.HAqusAMoRiUz0bOrffOviRgdkUdfVouSjIrUSVwfoMldPFDgMi', '2025-01-06 17:32:39'),
+(51, 'pol', 'dan', 30340, '09175447598', 'poll@gmail.com', '$2y$10$drWq6rpue1bYum75ODUpYu6wlrSSc4gN6mxv6CGB/c61B7MeRyys.', '2025-01-06 17:41:54'),
+(52, 'pol', 'ojales', 30328, '09175447598', 'pol@gmail.com', '$2y$10$AMMRZyi8xnD6HT459RLu8Ox8UZgmQE/Ji0bavQ0awTHTCcFK7YX.u', '2025-01-06 17:44:22');
 
 -- --------------------------------------------------------
 
@@ -403,41 +443,35 @@ CREATE TABLE `user_order` (
   `id` int(11) NOT NULL,
   `user_id` int(11) NOT NULL,
   `date` date NOT NULL,
-  `total_cost` decimal(10,2) DEFAULT NULL
+  `total_cost` decimal(10,2) DEFAULT NULL,
+  `Address` varchar(255) NOT NULL,
+  `Detailed_Address` varchar(255) DEFAULT NULL,
+  `order_notes` text DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `user_order`
 --
 
-INSERT INTO `user_order` (`id`, `user_id`, `date`, `total_cost`) VALUES
-(61, 35, '2024-12-09', 1799.00),
-(62, 35, '2024-12-09', 1799.00),
-(63, 35, '2024-12-09', 1799.00),
-(64, 35, '2024-12-09', 1799.00),
-(65, 35, '2024-12-09', 1799.00),
-(66, 35, '2024-12-09', 1799.00),
-(67, 35, '2024-12-09', 1799.00),
-(68, 35, '2024-12-09', 1799.00),
-(69, 35, '2024-12-10', 29990.00),
-(70, 41, '2024-12-10', 2999.00),
-(71, 41, '2024-12-10', 8999.00),
-(72, 41, '2024-12-10', 2000.00),
-(73, 41, '2024-12-10', 500.00),
-(74, 41, '2024-12-10', 8999.00),
-(75, 35, '2024-12-10', 299.00),
-(76, 35, '2024-12-11', 1799.00),
-(77, 35, '2024-12-13', 5998.00),
-(78, 35, '2024-12-14', 8999.00),
-(79, 35, '2024-12-14', 4590.00),
-(80, 41, '2024-12-14', 8999.00),
-(81, 41, '2024-12-14', 2000.00),
-(82, 41, '2024-12-14', 8999.00),
-(83, 41, '2024-12-14', 2999.00),
-(84, 35, '2024-12-15', 8999.00),
-(85, 35, '2024-12-15', 2000.00),
-(86, 35, '2024-12-17', 9180.00),
-(87, 35, '2024-12-17', 26991.00);
+INSERT INTO `user_order` (`id`, `user_id`, `date`, `total_cost`, `Address`, `Detailed_Address`, `order_notes`) VALUES
+(86, 35, '2024-12-17', 9180.00, '', NULL, NULL),
+(87, 35, '2024-12-17', 26991.00, '', NULL, NULL),
+(88, 41, '2024-12-15', 2999.00, '', NULL, NULL),
+(89, 41, '2024-12-15', 1495.00, '', NULL, NULL),
+(90, 41, '2024-12-15', 800.00, '', NULL, NULL),
+(91, 35, '2024-12-15', 400.00, '', NULL, NULL),
+(92, 35, '2024-12-15', 500.00, '', NULL, NULL),
+(93, 35, '2024-12-15', 1799.00, '30390', 'urban poor fronting san jose gusu barrangay hall (palayan) near basket court infront of santander store.', 'this order is for doors that i asked last week. if possible i would like to get the yellow color door i told you to reserve for me.'),
+(94, 35, '2024-12-18', 8999.00, '30390', '', ''),
+(95, 35, '2025-01-06', 27178.00, '30390', 'urban poor fronting san jose gusu barrangay hall (palayan) near basket court infront of santander store.', ''),
+(96, 48, '2025-01-06', 14997.00, '30330', 'urban poor fronting san jose gusu barrangay hall (palayan) near basket court infront of santander store.', ''),
+(97, 48, '2025-01-06', 4590.00, '30330', '', ''),
+(98, 48, '2025-01-06', 500.00, '30330', '', ''),
+(99, 48, '2025-01-06', 1600.00, '30330', '', ''),
+(100, 48, '2025-01-06', 8000.00, '30330', '', ''),
+(101, 49, '2025-01-06', 31949.00, '30331', '', ''),
+(102, 50, '2025-01-06', 20997.00, '30328', '', ''),
+(103, 52, '2025-01-06', 44993.00, '30328', '', '');
 
 -- --------------------------------------------------------
 
@@ -452,33 +486,45 @@ CREATE TABLE `user_order_details` (
   `seller_id` int(11) NOT NULL,
   `quantity` int(11) NOT NULL,
   `status` enum('Pending','Completed','Canceled') NOT NULL,
-  `user_id` int(11) NOT NULL
+  `user_id` int(11) NOT NULL,
+  `is_active` tinyint(1) DEFAULT 1
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `user_order_details`
 --
 
-INSERT INTO `user_order_details` (`id`, `user_order_id`, `product_id`, `seller_id`, `quantity`, `status`, `user_id`) VALUES
-(103, 82, 22, 19, 1, 'Completed', 41),
-(104, 83, 23, 19, 1, 'Canceled', 41),
-(105, 84, 22, 19, 1, 'Canceled', 35),
-(106, 85, 21, 18, 5, 'Pending', 35),
-(107, 86, 25, 20, 2, 'Canceled', 35),
-(108, 87, 23, 19, 9, 'Completed', 35);
+INSERT INTO `user_order_details` (`id`, `user_order_id`, `product_id`, `seller_id`, `quantity`, `status`, `user_id`, `is_active`) VALUES
+(111, 90, 21, 18, 2, 'Pending', 41, 1),
+(114, 93, 24, 19, 1, 'Canceled', 35, 0),
+(115, 94, 22, 19, 1, 'Canceled', 35, 0),
+(116, 95, 22, 19, 2, 'Canceled', 35, 0),
+(117, 95, 25, 20, 2, 'Canceled', 35, 0),
+(118, 96, 22, 19, 1, 'Canceled', 48, 0),
+(119, 96, 23, 19, 2, 'Canceled', 48, 0),
+(120, 97, 25, 20, 1, 'Canceled', 48, 0),
+(121, 98, 19, 17, 1, 'Canceled', 48, 0),
+(122, 99, 21, 18, 4, 'Canceled', 48, 0),
+(123, 100, 20, 18, 4, 'Canceled', 48, 0),
+(124, 101, 22, 19, 1, 'Canceled', 49, 0),
+(125, 101, 25, 20, 5, 'Pending', 49, 1),
+(126, 102, 22, 19, 2, 'Pending', 50, 1),
+(127, 102, 23, 19, 1, 'Canceled', 50, 0),
+(128, 103, 22, 19, 4, 'Completed', 52, 0),
+(129, 103, 23, 19, 3, 'Canceled', 52, 0);
 
 --
 -- Triggers `user_order_details`
 --
 DELIMITER $$
-CREATE TRIGGER `after_status_update` AFTER UPDATE ON `user_order_details` FOR EACH ROW BEGIN
-    -- Check if the status has changed to 'Completed' or 'Canceled'
-    IF NEW.status IN ('Completed', 'Canceled') THEN
+CREATE TRIGGER `after_order_status_update` AFTER UPDATE ON `user_order_details` FOR EACH ROW BEGIN
+    -- Check if the status has changed to 'Completed' or 'Canceled' and is_active is still true
+    IF NEW.status IN ('Completed', 'Canceled') AND NEW.is_active = TRUE THEN
         INSERT INTO order_history (
             product_id,
             user_id,
             date_ordered,
-            date_completed, -- Keep 'date_completed'
+            date_completed,
             status,
             quantity,
             total_cost
@@ -597,7 +643,7 @@ ALTER TABLE `user_order_details`
 -- AUTO_INCREMENT for table `admin`
 --
 ALTER TABLE `admin`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT for table `barangay`
@@ -609,13 +655,13 @@ ALTER TABLE `barangay`
 -- AUTO_INCREMENT for table `carts`
 --
 ALTER TABLE `carts`
-  MODIFY `cart_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=72;
+  MODIFY `cart_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=88;
 
 --
 -- AUTO_INCREMENT for table `cart_items`
 --
 ALTER TABLE `cart_items`
-  MODIFY `cart_item_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=134;
+  MODIFY `cart_item_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=160;
 
 --
 -- AUTO_INCREMENT for table `categories`
@@ -627,7 +673,7 @@ ALTER TABLE `categories`
 -- AUTO_INCREMENT for table `order_history`
 --
 ALTER TABLE `order_history`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=31;
 
 --
 -- AUTO_INCREMENT for table `products`
@@ -639,7 +685,7 @@ ALTER TABLE `products`
 -- AUTO_INCREMENT for table `ratings`
 --
 ALTER TABLE `ratings`
-  MODIFY `rating_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `rating_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
 
 --
 -- AUTO_INCREMENT for table `seller`
@@ -657,19 +703,19 @@ ALTER TABLE `subscription`
 -- AUTO_INCREMENT for table `user`
 --
 ALTER TABLE `user`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=48;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=53;
 
 --
 -- AUTO_INCREMENT for table `user_order`
 --
 ALTER TABLE `user_order`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=88;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=104;
 
 --
 -- AUTO_INCREMENT for table `user_order_details`
 --
 ALTER TABLE `user_order_details`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=109;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=130;
 
 --
 -- Constraints for dumped tables
