@@ -91,8 +91,7 @@ function ajaxRequest(method, url, data, callback) {
 
 
 
-
-  // Function to handle AJAX requests
+// Function to handle AJAX requests
 function sendAjaxRequest(method, url, data, callback) {
   $.ajax({
       type: method,

@@ -1,5 +1,4 @@
 <?php
-// filepath: /c:/xampp/htdocs/git/Furnitures/Builders3/user/remove_order.php
 header('Content-Type: application/json');
 require_once 'classes.php';
 
@@ -25,3 +24,4 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 } else {
     echo json_encode(['success' => false, 'message' => 'Invalid request method.']);
 }
+?>
